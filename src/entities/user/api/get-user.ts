@@ -1,17 +1,22 @@
 import {apiClient} from "@shared/lib/openapi-fetch";
 import type {ApiSchema} from "@shared/types";
 
-export const getUser = async (): Promise<ApiSchema<'UserResponseDto'>> => {
-    const { data, error } = await apiClient.GET('/auth/me');
+export const getUser = async (): Promise<ApiSchema<'UserResponseDto'> | null> => {
+    try {
+        const {data, error, response} = await apiClient.GET('/auth/me');
 
-    if (error) {
-        console.error("[GetUser Error]:", error);
-        throw new Error(error.error);
+        if (error) {
+            if (response.status === 401) {
+                return null;
+            }
+            console.error("Eroare Server:", error.message || error);
+            return null;
+        }
+
+        return data?.data ?? null;
+
+    } catch (e) {
+        console.error("Eroare Rețea/Infrastructură:", e);
+        return null;
     }
-
-    if (!data?.data) {
-        throw new Error("Datele utilizatorului sunt indisponibile în acest moment");
-    }
-
-    return data.data;
 }
