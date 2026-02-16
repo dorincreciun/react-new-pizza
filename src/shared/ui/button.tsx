@@ -1,9 +1,12 @@
-import type {ButtonHTMLAttributes} from "react"
-import {useFormStatus} from "react-dom"
-import {cva, type VariantProps} from "class-variance-authority"
-import {Loader} from "lucide-react"
-import {cn} from "@/shared/utils"
-import {Slot} from "@radix-ui/react-slot"
+import type { ButtonHTMLAttributes } from "react"
+
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Loader } from "lucide-react"
+import { useFormStatus } from "react-dom"
+
+import { cn } from "@/shared/utils"
+
 
 // --- STYLES (CVA) ---
 
@@ -187,18 +190,18 @@ interface ButtonProps extends NativeButtonProps, VariantProps<typeof buttonCva> 
 // --- COMPONENT ---
 
 export const Button = ({
-                           className,
-                           isLoading,
-                           disabled,
-                           size,
-                           color,
-                           kind,
-                           children,
-                           onlyIcon,
-                           asChild = false,
-                           ...rest
-                       }: ButtonProps) => {
-    const {pending} = useFormStatus()
+    className,
+    isLoading,
+    disabled,
+    size,
+    color,
+    kind,
+    children,
+    onlyIcon,
+    asChild = false,
+    ...rest
+}: ButtonProps) => {
+    const { pending } = useFormStatus()
 
     const activeLoading = Boolean(isLoading || pending)
     const buttonDisabled = Boolean(activeLoading || disabled)
@@ -208,7 +211,7 @@ export const Button = ({
     return (
         <Comp
             disabled={buttonDisabled}
-            className={cn(buttonCva({size, color, kind, onlyIcon}), className)}
+            className={cn(buttonCva({ size, color, kind, onlyIcon }), className)}
             data-loading={activeLoading ? "true" : "false"}
             {...rest}
         >
@@ -224,7 +227,7 @@ export const Button = ({
 
             {activeLoading && (
                 <span className="absolute inset-0 flex items-center justify-center">
-                    <Loader className="animate-spin" size={20}/>
+                    <Loader className="animate-spin" size={20} />
                 </span>
             )}
         </Comp>

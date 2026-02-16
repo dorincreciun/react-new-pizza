@@ -1,1 +1,1 @@
-export {logout} from './api/logout'
+export { logout } from "./api/logout"

@@ -1,1 +1,1 @@
-export {register} from './api/register'
+export { register } from "./api/register"
