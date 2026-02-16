@@ -1,26 +1,22 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { BrowserRouter } from "react-router"
 
-import { AppRouter } from "@app/providers/router"
+import { ModalsProvider, RouterProvider, TanstackProvider } from "@app/providers"
 
 import { Header } from "@widgets/header"
 
 import { RootLayout } from "@shared/layouts"
 
-const queryClient = new QueryClient()
-
 export const App = () => {
     return (
-        <QueryClientProvider client={queryClient}>
+        <TanstackProvider>
             <BrowserRouter>
-                <RootLayout>
-                    <Header />
-                    <AppRouter />
-                    {/* Tanstack Devtools */}
-                    <ReactQueryDevtools initialIsOpen={false} />
-                </RootLayout>
+                <ModalsProvider>
+                    <RootLayout>
+                        <Header />
+                        <RouterProvider />
+                    </RootLayout>
+                </ModalsProvider>
             </BrowserRouter>
-        </QueryClientProvider>
+        </TanstackProvider>
     )
 }
