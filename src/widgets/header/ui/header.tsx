@@ -1,7 +1,8 @@
-import { HeaderActions } from "@widgets/header/ui/header-actions"
-import { HeaderLogo } from "@widgets/header/ui/header-logo"
-
 import { Container } from "@shared/ui"
+
+import { HeaderActions } from "./header-actions"
+import { HeaderLogo } from "./header-logo"
+
 
 export const Header = () => {
     return (

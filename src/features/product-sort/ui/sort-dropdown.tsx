@@ -1,11 +1,11 @@
 import { ArrowDownUp, Check } from "lucide-react"
 
-import type { SortOption } from "@features/product-sort/model/types"
 
 import { Dropdown } from "@shared/ui"
 import { cn } from "@shared/utils"
 
 import { useProductSort } from "../lib/use-product-sort"
+import type { SortOption } from "../model/types"
 
 
 const SORT_OPTIONS: SortOption[] = [

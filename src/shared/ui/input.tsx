@@ -10,7 +10,8 @@ import {
 import { cva, type VariantProps } from "class-variance-authority"
 import { useFormContext, type RegisterOptions } from "react-hook-form"
 
-import { cn } from "@/shared/utils"
+import { cn } from "@shared/utils"
+
 
 const inputVariants = cva(
     [

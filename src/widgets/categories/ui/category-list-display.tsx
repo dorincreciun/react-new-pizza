@@ -1,12 +1,13 @@
 import { ArrowDown } from "lucide-react"
 import { useLocation } from "react-router"
 
-import { CategoryItem } from "@widgets/categories/ui/category-item"
 
 import type { CategoryType } from "@entities/category"
 
 import { Dropdown, usePriorityContext, PriorityNavigation } from "@shared/ui"
 import { cn } from "@shared/utils"
+
+import { CategoryItem } from "./category-item"
 
 interface Props {
     categories: CategoryType[]

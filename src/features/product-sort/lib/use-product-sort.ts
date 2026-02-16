@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react"
 
 import { useNavigate, useSearchParams } from "react-router"
 
-import type { ProductSort } from "@features/product-sort/model/types"
+import type { ProductSort } from "../model/types"
 
 export const useProductSort = () => {
     const navigate = useNavigate()

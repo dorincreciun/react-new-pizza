@@ -1,11 +1,12 @@
 import { Suspense, useEffect, useCallback } from "react"
 
-import { MODAL_REGISTRY } from "@app/providers/modal/ui/modal-registry"
 
 import { useModalStore } from "@entities/modal"
 
 import { Overlay, Portal } from "@shared/ui"
 import { cn } from "@shared/utils"
+
+import { MODAL_REGISTRY } from "./modal-registry"
 
 export const ModalManager = () => {
     const activeModal = useModalStore((s) => s.activeModal)

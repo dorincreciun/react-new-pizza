@@ -1,8 +1,8 @@
-import { CategoryListDisplay } from "@widgets/categories/ui/category-list-display"
-
 import { type CategoryType, CUSTOM_CATEGORIES } from "@entities/category"
 
 import { PriorityNavigation } from "@shared/ui"
+
+import { CategoryListDisplay } from "./category-list-display"
 
 const apiCategories: CategoryType[] = [
     {
@@ -28,7 +28,6 @@ const apiCategories: CategoryType[] = [
 ]
 
 export const CategoryList = () => {
-
     const categories = [...CUSTOM_CATEGORIES, ...apiCategories]
 
     return (
