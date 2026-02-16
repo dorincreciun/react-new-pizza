@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { ModalManager } from "@app/providers/modal/ui/modal-meneger"
+import { ModalManager } from "@app/providers/modal/ui/modal-manager"
 
 interface Props {
     children: ReactNode

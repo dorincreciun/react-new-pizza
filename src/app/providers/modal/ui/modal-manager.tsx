@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, useEffect, useCallback } from "react"
 
 import { MODAL_REGISTRY } from "@app/providers/modal/ui/modal-registry"
 
@@ -8,10 +8,23 @@ import { Overlay, Portal } from "@shared/ui"
 import { cn } from "@shared/utils"
 
 export const ModalManager = () => {
-    const isOpen = useModalStore((s) => s.isOpen)
     const activeModal = useModalStore((s) => s.activeModal)
+    const closeModal = useModalStore((s) => s.closeModal)
 
-    if (!isOpen || !activeModal) return null
+    const handleEscape = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.key === "Escape") closeModal()
+        },
+        [closeModal],
+    )
+
+    useEffect(() => {
+        if (!activeModal) return
+        document.addEventListener("keydown", handleEscape)
+        return () => document.removeEventListener("keydown", handleEscape)
+    }, [activeModal, handleEscape])
+
+    if (!activeModal) return null
 
     const Component = MODAL_REGISTRY[activeModal]
 
@@ -23,13 +36,16 @@ export const ModalManager = () => {
     return (
         <Suspense fallback={null}>
             <Portal>
-                <Overlay />
+                <Overlay onClick={closeModal} />
                 <div
+                    role="dialog"
+                    aria-modal="true"
                     className={cn([
-                        "absolute top-1/2 left-1/2 z-50 -translate-1/2",
+                        "absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
                         "w-full max-w-112.5 rounded-[18px] bg-white p-11.5",
                         "space-y-5",
                     ])}
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <Component />
                 </div>
