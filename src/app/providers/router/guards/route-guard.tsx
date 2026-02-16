@@ -1,17 +1,27 @@
-import type {ReactNode} from "react";
-import {Navigate, useLocation} from "react-router";
-import {RoutePath} from "@app/providers/router/const/route-const.ts";
+import type { ReactNode } from "react";
+import { Navigate, useLocation } from "react-router";
+import {RoutePath} from "../const/route-const";
+import type {UserRole} from "@app/providers/router/types/router.ts";
 
 interface RouteGuardProps {
     children: ReactNode;
+    authOnly?: boolean
+    roles?: UserRole[];
 }
 
-export const RouteGuard = ({ children }: RouteGuardProps) => {
-    const isAuthenticated = false;
+export const RouteGuard = ({ children, roles }: RouteGuardProps) => {
     const location = useLocation();
 
+    // TODO: Înlocuiește cu logica ta reală (ex: din un store Zustand sau Redux)
+    const isAuthenticated = false;
+    const userRole = 'USER';
+
     if (!isAuthenticated) {
-        return <Navigate to={RoutePath.home} state={{ from: location }} replace />;
+        return <Navigate to={RoutePath.main} state={{ from: location }} replace />;
+    }
+
+    if (roles && !roles.includes(userRole)) {
+        return <Navigate to={RoutePath.main} replace />;
     }
 
     return <>{children}</>;

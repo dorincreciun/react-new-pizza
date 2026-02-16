@@ -1,12 +1,11 @@
-import { AppRoutes, RoutePath} from "@app/providers/router/const/route-const.ts";
+import type {AppRouteProps} from "../types/router";
+import {RoutePath} from "../const/route-const";
 import {HomePage} from "@pages/home";
-import type {AppRouteProps} from "@app/providers/router/types/router.ts";
 
-export const ROUTE_CONFIG: Partial<Record<AppRoutes, AppRouteProps>> = {
-    [AppRoutes.MAIN]: {
-        path: RoutePath.home,
+export const ROUTE_CONFIG: AppRouteProps[] = [
+    {
+        path: RoutePath.main,
         element: <HomePage />,
         authOnly: false,
-        access: ['USER']
     },
-};
+];

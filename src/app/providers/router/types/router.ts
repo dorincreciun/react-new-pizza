@@ -1,10 +1,16 @@
-import type { RouteObject } from 'react-router';
-import type { ApiSchema } from "@/shared/types";
+import type {IndexRouteObject, NonIndexRouteObject} from 'react-router';
+import type {ApiSchema} from "@/shared/types";
+import type {RoutePath} from "../const/route-const";
 
-type UserRole = ApiSchema<'UserResponseDto'>['rol'];
+export type UserRole = ApiSchema<'UserResponseDto'>['rol'];
 
-export type AppRouteProps = Omit<RouteObject, 'children'> & {
+type AppAllowedPaths = typeof RoutePath[keyof typeof RoutePath];
+
+type ReactRouterRoute = IndexRouteObject | NonIndexRouteObject;
+
+export type AppRouteProps = Omit<ReactRouterRoute, 'children' | 'path'> & {
+    path?: AppAllowedPaths;
     authOnly?: boolean;
-    access?: UserRole[];
+    roles?: UserRole[];
     children?: AppRouteProps[];
 };

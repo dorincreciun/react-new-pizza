@@ -1,11 +1,11 @@
 export const AppRoutes = {
-    MAIN: 'home',
+    MAIN: 'main',
     NOT_FOUND: 'not_found',
 } as const;
 
-export type AppRoutes = typeof AppRoutes[keyof typeof AppRoutes];
+export type AppRoutesType = typeof AppRoutes[keyof typeof AppRoutes];
 
-export const RoutePath: Record<AppRoutes, string> = {
+export const RoutePath: Record<AppRoutesType, string> = {
     [AppRoutes.MAIN]: '/',
     [AppRoutes.NOT_FOUND]: '*',
 };
