@@ -8,7 +8,8 @@ import { Overlay, Portal } from "@shared/ui"
 import { cn } from "@shared/utils"
 
 export const ModalManager = () => {
-    const { activeModal, isOpen } = useModalStore()
+    const isOpen = useModalStore((s) => s.isOpen)
+    const activeModal = useModalStore((s) => s.activeModal)
 
     if (!isOpen || !activeModal) return null
 
