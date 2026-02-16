@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
-import {RoutePath} from "../const/route-const";
+import {RoutePath} from "@shared/const/route-const";
 import type {UserRole} from "@app/providers/router/types/router.ts";
 
 interface RouteGuardProps {

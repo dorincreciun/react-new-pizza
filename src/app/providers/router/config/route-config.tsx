@@ -1,5 +1,5 @@
 import type {AppRouteProps} from "../types/router";
-import {RoutePath} from "../const/route-const";
+import {RoutePath} from "@shared/const/route-const";
 import {HomePage} from "@pages/home";
 
 export const ROUTE_CONFIG: AppRouteProps[] = [

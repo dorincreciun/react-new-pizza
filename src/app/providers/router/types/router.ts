@@ -1,6 +1,6 @@
 import type {IndexRouteObject, NonIndexRouteObject} from 'react-router';
 import type {ApiSchema} from "@/shared/types";
-import type {RoutePath} from "../const/route-const";
+import type {RoutePath} from "@shared/const/route-const";
 
 export type UserRole = ApiSchema<'UserResponseDto'>['rol'];
 
