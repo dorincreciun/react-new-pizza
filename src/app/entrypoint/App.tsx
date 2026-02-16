@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router"
 
-
+import { CartDrawer } from "@widgets/cart"
 import { Header } from "@widgets/header"
 
 import { RootLayout } from "@shared/layouts"
@@ -15,6 +15,7 @@ export const App = () => {
                     <RootLayout>
                         <Header />
                         <RouterProvider />
+                        <CartDrawer />
                     </RootLayout>
                 </ModalsProvider>
             </BrowserRouter>

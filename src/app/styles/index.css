@@ -25,3 +25,13 @@
 body {
     font-family: 'Nunito', 'sans-serif';
 }
+
+@keyframes cart-slide-in {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes cart-slide-out {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}

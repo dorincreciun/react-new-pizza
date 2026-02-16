@@ -1,5 +1,6 @@
-import { ShoppingBag, User } from "lucide-react"
+import { User } from "lucide-react"
 
+import { ToggleCart } from "@entities/cart"
 import { useModalStore } from "@entities/modal"
 
 import { Button } from "@shared/ui"
@@ -9,9 +10,7 @@ export const HeaderActions = () => {
 
     return (
         <div className="flex items-center gap-4">
-            <Button kind={"outline"} onlyIcon>
-                <ShoppingBag />
-            </Button>
+            <ToggleCart />
             <Button onClick={() => openModal("LOGIN")}>
                 <User />
                 <span className="max-md:hidden">Login</span>
