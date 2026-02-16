@@ -1,15 +1,10 @@
 import { CategoryListDisplay } from "@widgets/categories/ui/category-list-display"
 
-import type { CategoryType } from "@entities/category"
+import { type CategoryType, CUSTOM_CATEGORIES } from "@entities/category"
 
 import { PriorityNavigation } from "@shared/ui"
 
-const categories: CategoryType[] = [
-    {
-        id: 1,
-        slug: "toate",
-        name: "Toate",
-    },
+const apiCategories: CategoryType[] = [
     {
         id: 2,
         slug: "picante",
@@ -32,7 +27,10 @@ const categories: CategoryType[] = [
     },
 ]
 
-export const CategoryList = async () => {
+export const CategoryList = () => {
+
+    const categories = [...CUSTOM_CATEGORIES, ...apiCategories]
+
     return (
         <PriorityNavigation>
             <CategoryListDisplay categories={categories} />
