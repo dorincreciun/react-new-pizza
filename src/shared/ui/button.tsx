@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Loader } from "lucide-react"
 import { useFormStatus } from "react-dom"
 
-import { cn } from "@/shared/utils"
+import { cn } from "@shared/utils"
 
 
 // --- STYLES (CVA) ---

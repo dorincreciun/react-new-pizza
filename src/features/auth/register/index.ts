@@ -1,1 +1,1 @@
-export { register } from "./api/register"
+export { RegisterModal } from "./ui/register-modal"

@@ -6,17 +6,16 @@ import { useModalStore } from "@entities/modal"
 import { Button, Input } from "@shared/ui"
 import { cn } from "@shared/utils"
 
-import { LoginHeader } from "./login-header"
-import { useLoginForm } from "../lib/use-login-form"
+import { RegisterHeader } from "./register-header"
+import { useRegisterForm } from "../lib/use-register-form"
 
-
-export const LoginModal = () => {
-    const { methods, onSubmit, isLoading, errors } = useLoginForm()
-    const openModal = useModalStore(s => s.openModal)
+export const RegisterModal = () => {
+    const { methods, onSubmit, isLoading, errors } = useRegisterForm()
+    const openModal = useModalStore((s) => s.openModal)
 
     return (
         <FormProvider {...methods}>
-            <LoginHeader />
+            <RegisterHeader />
 
             <form onSubmit={onSubmit} className="space-y-5">
                 <Input name="email">
@@ -75,18 +74,14 @@ export const LoginModal = () => {
                     className="h-12 w-full text-base font-semibold shadow-sm transition-all"
                     type="submit"
                 >
-                    Conectare
+                    Înregistrare
                 </Button>
 
                 <div className="mt-2 border-t border-gray-50 pt-4 text-center">
                     <p className="text-sm text-gray-600">
                         Nu ai un cont încă?{" "}
-                        <Button
-                            type={'button'}
-                            kind={'ghost'}
-                            onClick={()=> openModal('REGISTER')}
-                        >
-                            Creează cont nou
+                        <Button type={"button"} kind={"ghost"} onClick={() => openModal("LOGIN")}>
+                            Conectare
                         </Button>
                     </p>
                 </div>
