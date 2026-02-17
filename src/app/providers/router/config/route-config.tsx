@@ -1,6 +1,6 @@
 import { HomePage } from "@pages/home"
 
-import { RoutePath } from "@shared/const/route-const"
+import { RoutePath } from "@shared/const/route-keys"
 
 import type { AppRouteProps } from "../types/router"
 

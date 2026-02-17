@@ -1,6 +1,6 @@
 import type { IndexRouteObject, NonIndexRouteObject } from "react-router"
 
-import type { RoutePath } from "@shared/const/route-const"
+import type { RoutePath } from "@shared/const/route-keys"
 
 import type { ApiSchema } from "@/shared/types"
 

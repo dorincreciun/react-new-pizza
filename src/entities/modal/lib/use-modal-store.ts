@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-import type { ModalKeyType } from "@shared/const/modal-const"
+import type { ModalKeyType } from "@shared/const/modal-keys"
 
 interface ModalState {
     activeModal: ModalKeyType | null

@@ -1,4 +1,4 @@
-import { apiClient } from "@shared/lib/openapi-fetch"
+import { apiClient } from "@shared/lib"
 import type { ApiSchema } from "@shared/types"
 
 export const getUser = async (): Promise<ApiSchema<"UserResponseDto"> | null> => {

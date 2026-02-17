@@ -1,4 +1,4 @@
-import { apiClient } from "@shared/lib/openapi-fetch"
+import { apiClient } from "@shared/lib"
 
 import type { RegisterDto } from "../model/types"
 

@@ -1,49 +1,28 @@
 import { useForm } from "react-hook-form"
 
-import { useModalStore } from "@entities/modal"
+import { getErrorMessage } from "@shared/lib"
 
-import { login } from "../api/login"
+import { useLogin } from "./use-login"
 import type { LoginDto } from "../model/types"
 
-const DEFAULT_VALUES: LoginDto = {
-    email: "",
-    password: "",
-}
-
-/**
- * Hook pentru gestionarea logicii de business a formularului de login.
- * Extrage responsabilitatea apelului API și a managementului de stare din UI.
- */
 export const useLoginForm = () => {
     const methods = useForm<LoginDto>({
-        defaultValues: DEFAULT_VALUES,
+        defaultValues: { email: "", password: "" },
         mode: "onBlur",
     })
 
+    const { mutateAsync, isPending } = useLogin()
     const { setError, handleSubmit, formState } = methods
-    const close = useModalStore((s) => s.closeModal)
 
     const handleLogin = async (dto: LoginDto) => {
         try {
-            const { data, error } = await login(dto)
+            await mutateAsync(dto)
+        } catch (error: unknown) {
+            const errorMessage = getErrorMessage(error)
 
-            if (error) {
-                return setError("root", {
-                    type: "server",
-                    message: error.message[0] || "Eroare server.",
-                })
-            }
-
-            if (data?.data?.accessToken) {
-                close()
-                return
-            }
-
-            throw new Error("Invalid API response structure")
-        } catch (err) {
-            console.error(err)
             setError("root", {
-                message: "Eroare de conexiune la server.",
+                type: "server",
+                message: errorMessage,
             })
         }
     }
@@ -51,7 +30,7 @@ export const useLoginForm = () => {
     return {
         methods,
         onSubmit: handleSubmit(handleLogin),
-        isLoading: formState.isSubmitting,
+        isLoading: isPending,
         errors: formState.errors,
         isValid: formState.isValid,
     }

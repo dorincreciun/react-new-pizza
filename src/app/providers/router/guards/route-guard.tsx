@@ -4,7 +4,7 @@ import { Navigate, useLocation } from "react-router"
 
 import type { UserRole } from "@app/providers/router/types/router.ts"
 
-import { RoutePath } from "@shared/const/route-const"
+import { RoutePath } from "@shared/const/route-keys"
 
 interface RouteGuardProps {
     children: ReactNode
