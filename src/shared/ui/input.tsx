@@ -112,12 +112,11 @@ const Root = ({ id: externalId, status: manualStatus, name, children, className 
     const ctx = useFormContext()
     const rhfError = name && ctx?.formState.errors[name]
     const isSubmitting = ctx?.formState.isSubmitting
-    const isValidating = ctx?.formState.isValidating
 
     let computedStatus: InputStatus = manualStatus || "default"
 
     // Sincronizare automată cu starea formularului
-    if (isSubmitting || isValidating) computedStatus = "loading"
+    if (isSubmitting) computedStatus = "loading"
     else if (rhfError) computedStatus = "error"
 
     return (
