@@ -1,21 +1,13 @@
+import type { UserEntity } from "@entities/user/model/types"
+
 import { apiClient } from "@shared/lib"
-import type { ApiSchema } from "@shared/types"
 
-export const getUser = async (): Promise<ApiSchema<"UserResponseDto"> | null> => {
-    try {
-        const { data, error, response } = await apiClient.GET("/auth/me")
+export const getUser = async (): Promise<UserEntity> => {
+    const { data, error } = await apiClient.GET("/auth/me")
 
-        if (error) {
-            if (response.status === 401) {
-                return null
-            }
-            console.error("Eroare Server:", error.message || error)
-            return null
-        }
-
-        return data?.data ?? null
-    } catch (e) {
-        console.error("Eroare Rețea/Infrastructură:", e)
-        return null
+    if (error || !data?.data) {
+        throw error || new Error("No data returned")
     }
+
+    return data.data
 }

@@ -3,6 +3,8 @@ import type { ReactNode } from "react"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
+import { AuthInitializer } from "@app/providers/tanstack/ui/auth-initializer"
+
 import { queryClient } from "../../../api"
 
 interface Props {
@@ -12,7 +14,7 @@ interface Props {
 export const TanstackProvider = ({ children }: Props) => {
     return (
         <QueryClientProvider client={queryClient}>
-            {children}
+            <AuthInitializer>{children}</AuthInitializer>
 
             {/* Tanstack Devtools */}
             <ReactQueryDevtools initialIsOpen={false} />

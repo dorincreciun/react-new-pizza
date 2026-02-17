@@ -12,6 +12,7 @@ export const useLogout = () => {
         mutationFn: async () => await logout(),
         onSuccess: () => {
             clearAuth()
+            queryClient.setQueryData(["authUser"], null)
             queryClient.clear()
         },
         onError: () => {

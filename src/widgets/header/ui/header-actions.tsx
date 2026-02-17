@@ -1,20 +1,16 @@
-import { User } from "lucide-react"
+import { LoginButton } from "@features/auth/login"
+import { LogoutButton } from "@features/auth/logout"
 
 import { ToggleCart } from "@entities/cart"
-import { useModalStore } from "@entities/modal"
-
-import { Button } from "@shared/ui"
+import { useUser } from "@entities/user"
 
 export const HeaderActions = () => {
-    const openModal = useModalStore((s) => s.openModal)
+    const user = useUser()
 
     return (
         <div className="flex items-center gap-4">
             <ToggleCart />
-            <Button onClick={() => openModal("LOGIN")}>
-                <User />
-                <span className="max-md:hidden">Login</span>
-            </Button>
+            {user ? <LogoutButton /> : <LoginButton />}
         </div>
     )
 }

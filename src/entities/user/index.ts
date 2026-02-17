@@ -1,4 +1,5 @@
 export type { UserEntity } from "./model/types"
-export { updateUser } from "./api/update-user"
 export { getUser } from "./api/get-user"
-export { useAuthStore } from './lib/use-auth-session'
+export { useAuthStore } from "./lib/use-auth-store"
+export { useAuthInit } from "./lib/use-auth-init"
+export { useUser } from "./lib/use-user"
