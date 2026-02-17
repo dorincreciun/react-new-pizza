@@ -13,6 +13,7 @@ export const useLogout = () => {
     const handleClear = () => {
         clearAuth()
         queryClient.setQueryData(QueryKeys.authUser, null)
+        queryClient.removeQueries({ queryKey: QueryKeys.authUser })
         queryClient.clear()
     }
 

@@ -21,7 +21,10 @@ export const useAuthInit = () => {
 
     useEffect(() => {
         if (isError && token) {
-            logout()
+            const timeoutId = setTimeout(() => {
+                logout()
+            }, 0)
+            return () => clearTimeout(timeoutId)
         }
     }, [isError, token, logout])
 
