@@ -7,7 +7,7 @@ import type { LoginDto } from "../model/types"
 
 export const useLoginForm = () => {
     const methods = useForm<LoginDto>({
-        defaultValues: { email: "", password: "" },
+        defaultValues: { email: "john.doe@example.com", password: "SecurePassword123!" },
         mode: "onBlur",
     })
 

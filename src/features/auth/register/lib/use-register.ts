@@ -1,14 +1,17 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { useModalStore } from "@entities/modal"
 import { useAuthStore } from "@entities/user"
+
+import { QueryKeys } from "@shared/const"
 
 import { register } from "../api/register"
 import type { RegisterDto, RegisterResponse } from "../model/types"
 
 export const useRegister = () => {
     const setToken = useAuthStore((s) => s.setToken)
-    const close = useModalStore((s) => s.closeModal)
+    const closeModal = useModalStore((s) => s.closeModal)
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: async (values: RegisterDto): Promise<RegisterResponse> => {
@@ -21,10 +24,11 @@ export const useRegister = () => {
             return data.data
         },
         onSuccess: (response) => {
-            if (response.accessToken) {
-                setToken(response.accessToken)
-                close()
-            }
+            setToken(response.accessToken)
+
+            queryClient.setQueryData(QueryKeys.authUser, response.user)
+
+            closeModal()
         },
     })
 }

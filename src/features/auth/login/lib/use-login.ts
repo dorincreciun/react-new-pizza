@@ -1,14 +1,17 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { useModalStore } from "@entities/modal"
 import { useAuthStore } from "@entities/user"
+
+import { QueryKeys } from "@shared/const"
 
 import { login } from "../api/login"
 import type { LoginDto, LoginResponse } from "../model/types"
 
 export const useLogin = () => {
     const setToken = useAuthStore((s) => s.setToken)
-    const close = useModalStore((s) => s.closeModal)
+    const closeModal = useModalStore((s) => s.closeModal)
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: async (values: LoginDto): Promise<LoginResponse> => {
@@ -21,10 +24,11 @@ export const useLogin = () => {
             return data.data
         },
         onSuccess: (response) => {
-            if (response.accessToken) {
-                setToken(response.accessToken)
-                close()
-            }
+            setToken(response.accessToken)
+
+            queryClient.setQueryData(QueryKeys.authUser, response.user)
+
+            closeModal()
         },
     })
 }

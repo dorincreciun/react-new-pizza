@@ -4,20 +4,21 @@ import { logout } from "@features/auth/logout"
 
 import { useAuthStore } from "@entities/user"
 
+import { QueryKeys } from "@shared/const"
+
 export const useLogout = () => {
     const clearAuth = useAuthStore((s) => s.logout)
     const queryClient = useQueryClient()
 
+    const handleClear = () => {
+        clearAuth()
+        queryClient.setQueryData(QueryKeys.authUser, null)
+        queryClient.clear()
+    }
+
     return useMutation({
-        mutationFn: async () => await logout(),
-        onSuccess: () => {
-            clearAuth()
-            queryClient.setQueryData(["authUser"], null)
-            queryClient.clear()
-        },
-        onError: () => {
-            clearAuth()
-            queryClient.clear()
-        },
+        mutationFn: logout,
+        onSuccess: handleClear,
+        onError: handleClear,
     })
 }

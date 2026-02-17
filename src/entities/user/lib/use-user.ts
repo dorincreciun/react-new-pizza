@@ -1,12 +1,15 @@
-import { useQuery } from "@tanstack/react-query"
+import { useSyncExternalStore } from "react"
 
-import type { UserEntity } from "@entities/user"
+import { useQueryClient } from "@tanstack/react-query"
 
-export const useUser = () => {
-    const { data } = useQuery<UserEntity | null>({
-        queryKey: ["authUser"],
-        enabled: false,
-    })
+import { QueryKeys } from "@shared/const"
 
-    return data ?? null
+import type { UserEntity } from "../model/types"
+
+export const useUser = (): UserEntity | null => {
+    const queryClient = useQueryClient()
+    return useSyncExternalStore(
+        (onStoreChange) => queryClient.getQueryCache().subscribe(onStoreChange),
+        () => queryClient.getQueryData<UserEntity>(QueryKeys.authUser) ?? null,
+    )
 }
