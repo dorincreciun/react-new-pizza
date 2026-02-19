@@ -28,7 +28,7 @@ export const ProductFilter = () => {
                 Фильтрация
             </Title>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="overflow-y-auto">
                 {/* Types */}
                 <FilterSection data={types} />
 
