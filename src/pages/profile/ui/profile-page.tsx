@@ -10,65 +10,69 @@ import { Button, Container, InfoCard, Title } from "@shared/ui"
 
 export const ProfilePage = () => {
     return (
-        <Container className="pt-5 pb-9">
-            {/* Header Section */}
-            <div className="mb-8">
-                <Title as="h1" size="xl" className="mb-6">
-                    Profilul meu
-                </Title>
-
-                <DashboardStats />
-
-                {/* Profile Card */}
-                <div className="rounded-xl border border-black/6 bg-white p-6 shadow-sm">
-                    <div className="flex items-start gap-6">
-                        <UpdateAvatar />
-                        <UserInfoProfile />
+        <Container className="pt-6 pb-12 md:pt-8 md:pb-16">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10 xl:gap-12">
+                {/* Sidebar: identitate (fixă, la stânga pe desktop) */}
+                <aside className="shrink-0 lg:sticky lg:top-6 lg:w-72 xl:w-80">
+                    <Title as="h1" size="xl" className="mb-6 lg:mb-6">
+                        Profilul meu
+                    </Title>
+                    <div className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-sm">
+                        <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:text-left lg:flex-col lg:text-center">
+                            <UpdateAvatar />
+                            <UserInfoProfile />
+                        </div>
                     </div>
-                </div>
-            </div>
+                </aside>
 
-            {/* Information Sections - Layout pe două coloane */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <PersonalInfoCard />
+                {/* Zona principală: statistici + informații + setări */}
+                <main className="min-w-0 flex-1 space-y-8">
+                    <section aria-label="Statistici">
+                        <DashboardStats />
+                    </section>
 
-                <InfoCard>
-                    <InfoCard.Header>
-                        <Title as="h2" size="md" className="text-gray-900">
-                            Setări cont
-                        </Title>
-                    </InfoCard.Header>
+                    <section aria-label="Informații personale">
+                        <PersonalInfoCard />
+                    </section>
 
-                    <InfoCard.Body>
-                        {/* Schimbă Parola - Feature: Auth */}
-                        <InfoCard.Row>
-                            <InfoCard.Icon icon={Shield} />
-                            <InfoCard.Content
-                                label="Schimbă parola"
-                                value="Actualizează parola contului tău"
-                            />
-                            <InfoCard.Action>
-                                <Button onlyIcon size="sm" kind="ghost">
-                                    <Edit2 size={18} />
-                                </Button>
-                            </InfoCard.Action>
-                        </InfoCard.Row>
+                    <section aria-label="Setări cont">
+                        <InfoCard>
+                            <InfoCard.Header>
+                                <Title as="h2" size="md" className="text-gray-900">
+                                    Setări cont
+                                </Title>
+                            </InfoCard.Header>
 
-                        {/* Istoric Comenzi - Feature: Orders */}
-                        <InfoCard.Row>
-                            <InfoCard.Icon icon={Calendar} />
-                            <InfoCard.Content
-                                label="Istoric comenzi"
-                                value="Vezi comenzile tale anterioare"
-                            />
-                            <InfoCard.Action>
-                                <Button onlyIcon size="sm" kind="ghost">
-                                    <Edit2 size={18} />
-                                </Button>
-                            </InfoCard.Action>
-                        </InfoCard.Row>
-                    </InfoCard.Body>
-                </InfoCard>
+                            <InfoCard.Body>
+                                <InfoCard.Row>
+                                    <InfoCard.Icon icon={Shield} />
+                                    <InfoCard.Content
+                                        label="Schimbă parola"
+                                        value="Actualizează parola contului tău"
+                                    />
+                                    <InfoCard.Action>
+                                        <Button onlyIcon size="sm" kind="ghost">
+                                            <Edit2 size={18} />
+                                        </Button>
+                                    </InfoCard.Action>
+                                </InfoCard.Row>
+
+                                <InfoCard.Row>
+                                    <InfoCard.Icon icon={Calendar} />
+                                    <InfoCard.Content
+                                        label="Istoric comenzi"
+                                        value="Vezi comenzile tale anterioare"
+                                    />
+                                    <InfoCard.Action>
+                                        <Button onlyIcon size="sm" kind="ghost">
+                                            <Edit2 size={18} />
+                                        </Button>
+                                    </InfoCard.Action>
+                                </InfoCard.Row>
+                            </InfoCard.Body>
+                        </InfoCard>
+                    </section>
+                </main>
             </div>
         </Container>
     )

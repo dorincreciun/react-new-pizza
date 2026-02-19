@@ -8,10 +8,21 @@ export const PersonalInfoCard = () => {
             <InfoCard.Header>Informații personale</InfoCard.Header>
 
             <InfoCard.Body>
-                {/* Nume Complet */}
+                {/* Prenume */}
                 <InfoCard.Row>
                     <InfoCard.Icon icon={User} />
-                    <InfoCard.Content label="Nume complet" value="John Doe" />
+                    <InfoCard.Content label="Prenume" value="John" />
+                    <InfoCard.Action>
+                        <Button onlyIcon size="sm" kind="ghost">
+                            <Edit2 size={18} />
+                        </Button>
+                    </InfoCard.Action>
+                </InfoCard.Row>
+
+                {/* Nume de familie */}
+                <InfoCard.Row>
+                    <InfoCard.Icon icon={User} />
+                    <InfoCard.Content label="Nume de familie" value="Doe" />
                     <InfoCard.Action>
                         <Button onlyIcon size="sm" kind="ghost">
                             <Edit2 size={18} />
