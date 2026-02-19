@@ -6,126 +6,178 @@
 export interface paths {
     "/auth/register": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        get?: never
-        put?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         /**
          * Înregistrare utilizator nou
          * @description Creează un nou cont de utilizator cu email și parolă. Parola este hash-uită înainte de a fi salvată în baza de date. Refresh token-ul este setat în cookie.
          */
-        post: operations["AuthController_register"]
-        delete?: never
-        options?: never
-        head?: never
-        patch?: never
-        trace?: never
-    }
+        post: operations["AuthController_register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        get?: never
-        put?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         /**
          * Autentificare utilizator
          * @description Autentifică un utilizator existent folosind email și parolă. Returnează access token în body și refresh token în cookie.
          */
-        post: operations["AuthController_login"]
-        delete?: never
-        options?: never
-        head?: never
-        patch?: never
-        trace?: never
-    }
+        post: operations["AuthController_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/refresh": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        get?: never
-        put?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         /**
          * Reînnoire access token
          * @description Reînnoiește access token-ul folosind refresh token-ul din cookie (OBLIGATORIU). Refresh token-ul este securizat și trimis DOAR în cookie. Returnează un nou access token în body și actualizează refresh token-ul în cookie.
          */
-        post: operations["AuthController_refresh"]
-        delete?: never
-        options?: never
-        head?: never
-        patch?: never
-        trace?: never
-    }
+        post: operations["AuthController_refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/logout": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        get?: never
-        put?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         /**
          * Deconectare utilizator
          * @description Deconectează utilizatorul autentificat prin ștergerea cookie-ului cu refresh token. Access token-ul rămâne valid până la expirare, dar refresh token-ul este invalidat.
          */
-        post: operations["AuthController_logout"]
-        delete?: never
-        options?: never
-        head?: never
-        patch?: never
-        trace?: never
-    }
+        post: operations["AuthController_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/me": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         /**
          * Preluare date utilizator curent
          * @description Returnează datele utilizatorului autentificat pe baza token-ului JWT din header.
          */
-        get: operations["AuthController_getMe"]
-        put?: never
-        post?: never
-        delete?: never
-        options?: never
-        head?: never
-        patch?: never
-        trace?: never
-    }
+        get: operations["AuthController_getMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/profile": {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        get?: never
-        put?: never
-        post?: never
-        delete?: never
-        options?: never
-        head?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
         /**
          * Actualizare profil utilizator
          * @description Actualizează datele profilului utilizatorului autentificat. Toate câmpurile sunt opționale - poți actualiza doar ceea ce dorești (firstName, lastName, profileImage). Imaginea de profil va fi uploadată în Cloudinary.
          */
-        patch: operations["AuthController_updateProfile"]
-        trace?: never
-    }
+        patch: operations["AuthController_updateProfile"];
+        trace?: never;
+    };
+    "/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista categorii
+         * @description Returnează toate categoriile (fără query params).
+         */
+        get: operations["CategoryController_findAll"];
+        put?: never;
+        /**
+         * Creare categorie
+         * @description Creează o categorie nouă. Slug-ul trebuie să fie unic.
+         */
+        post: operations["CategoryController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalii categorie
+         * @description Returnează o categorie după ID.
+         */
+        get: operations["CategoryController_findOne"];
+        put?: never;
+        post?: never;
+        /**
+         * Ștergere categorie
+         * @description Șterge o categorie. Versiune de test – poate fi refăcută ulterior cu soft delete.
+         */
+        delete: operations["CategoryController_remove"];
+        options?: never;
+        head?: never;
+        /**
+         * Actualizare categorie
+         * @description Actualizează o categorie existentă. Toate câmpurile sunt opționale.
+         */
+        patch: operations["CategoryController_update"];
+        trace?: never;
+    };
 }
-export type webhooks = Record<string, never>
+export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         ErrorResponseDto: {
@@ -133,139 +185,208 @@ export interface components {
              * @description Codul de status HTTP al erorii
              * @example 400
              */
-            statusCode: number
+            statusCode: number;
             /**
              * @description Mesajul de eroare sau array de mesaje de validare
              * @example Email-ul este deja înregistrat
              */
-            message: string | string[]
+            message: string | string[];
             /**
              * @description Numele erorii (ex: Bad Request, Not Found, Conflict)
              * @example Bad Request
              */
-            error: string
-        }
+            error: string;
+        };
         UserResponseDto: {
             /**
              * @description ID-ul unic al utilizatorului
              * @example 123e4567-e89b-12d3-a456-426614174000
              */
-            id: string
+            id: string;
             /**
              * @description Adresa de email a utilizatorului
              * @example john.doe@example.com
              */
-            email: string
+            email: string;
             /**
              * @description Numele utilizatorului
              * @example John
              */
-            firstName?: string
+            firstName: string | null;
             /**
              * @description Prenumele utilizatorului
              * @example Doe
              */
-            lastName?: string
+            lastName: string | null;
             /**
              * @description URL-ul imaginii de profil
              * @example https://example.com/profile.jpg
              */
-            profileImage?: string
+            profileImage: string | null;
             /**
              * @description Rolul utilizatorului în sistem
              * @example USER
              * @enum {string}
              */
-            rol: "USER" | "ADMIN"
+            rol: "USER" | "ADMIN";
             /**
              * @description Data și ora creării contului (format ISO 8601)
              * @example 2024-01-15T10:30:00.000Z
              */
-            createdAt: string
+            createdAt: string;
             /**
              * @description Data și ora ultimei actualizări (format ISO 8601)
              * @example 2024-01-15T10:30:00.000Z
              */
-            updatedAt: string
-        }
+            updatedAt: string;
+        };
         AuthResponseDto: {
             /**
              * @description Access token JWT pentru autentificare (trimis în body)
              * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
              */
-            accessToken: string
+            accessToken: string;
             /** @description Datele utilizatorului autentificat */
-            user: components["schemas"]["UserResponseDto"]
-        }
+            user: components["schemas"]["UserResponseDto"];
+        };
         UpdateProfileDto: {
             /**
              * @description Numele utilizatorului
              * @example John
              */
-            firstName?: string
+            firstName?: string;
             /**
              * @description Prenumele utilizatorului
              * @example Doe
              */
-            lastName?: string
-        }
+            lastName?: string;
+        };
         RegisterDto: {
             /**
              * @description Adresa de email a utilizatorului
              * @example john.doe@example.com
              */
-            email: string
+            email: string;
             /**
              * @description Parola utilizatorului (minim 8 caractere, cel puțin o literă mare, o literă mică, o cifră și un caracter special)
              * @example SecurePassword123!
              */
-            password: string
-        }
+            password: string;
+        };
         LoginDto: {
             /**
              * @description Adresa de email a utilizatorului
              * @example john.doe@example.com
              */
-            email: string
+            email: string;
             /**
              * @description Parola utilizatorului
              * @example SecurePassword123!
              */
-            password: string
-        }
-    }
-    responses: never
-    parameters: never
-    requestBodies: never
-    headers: never
-    pathItems: never
+            password: string;
+        };
+        CategoryResponseDto: {
+            /**
+             * @description ID-ul unic al categoriei
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Slug-ul unic al categoriei (URL-friendly)
+             * @example pizza-clasica
+             */
+            slug: string;
+            /**
+             * @description Numele categoriei
+             * @example Pizza Clasică
+             */
+            name: string;
+            /**
+             * @description Statutul categoriei (activ/inactiv)
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE";
+            /**
+             * @description Data și ora creării (format ISO 8601)
+             * @example 2024-01-15T10:30:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description Data și ora ultimei actualizări (format ISO 8601)
+             * @example 2024-01-15T10:30:00.000Z
+             */
+            updatedAt: string;
+        };
+        CreateCategoryDto: {
+            /**
+             * @description Identificator unic URL-friendly pentru categorie (kebab-case)
+             * @example pizza-clasica
+             */
+            slug: string;
+            /**
+             * @description Numele afișat al categoriei
+             * @example Pizza Clasică
+             */
+            name: string;
+            /**
+             * @description Statutul categoriei (activ/inactiv). Implicit: ACTIVE
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        UpdateCategoryDto: {
+            /**
+             * @description Identificator unic URL-friendly pentru categorie (kebab-case)
+             * @example pizza-clasica
+             */
+            slug?: string;
+            /**
+             * @description Numele afișat al categoriei
+             * @example Pizza Clasică
+             */
+            name?: string;
+            /**
+             * @description Statutul categoriei (activ/inactiv)
+             * @example INACTIVE
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+    };
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
-export type $defs = Record<string, never>
+export type $defs = Record<string, never>;
 export interface operations {
     AuthController_register: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RegisterDto"]
-            }
-        }
+                "application/json": components["schemas"]["RegisterDto"];
+            };
+        };
         responses: {
             /** @description Utilizator creat cu succes */
             201: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["AuthResponseDto"]
-                    }
-                }
-            }
+                        data: components["schemas"]["AuthResponseDto"];
+                    };
+                };
+            };
             /**
              * @description Date de validare invalide
              * @example {
@@ -279,8 +400,8 @@ export interface operations {
              */
             400: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -292,9 +413,9 @@ export interface operations {
                      *       "error": "Bad Request"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
             /**
              * @description Email-ul este deja înregistrat
              * @example {
@@ -305,8 +426,8 @@ export interface operations {
              */
             409: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -315,35 +436,35 @@ export interface operations {
                      *       "error": "Conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     AuthController_login: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LoginDto"]
-            }
-        }
+                "application/json": components["schemas"]["LoginDto"];
+            };
+        };
         responses: {
             /** @description Autentificare reușită */
             200: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["AuthResponseDto"]
-                    }
-                }
-            }
+                        data: components["schemas"]["AuthResponseDto"];
+                    };
+                };
+            };
             /**
              * @description Date de validare invalide
              * @example {
@@ -357,8 +478,8 @@ export interface operations {
              */
             400: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -370,9 +491,9 @@ export interface operations {
                      *       "error": "Bad Request"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
             /**
              * @description Email sau parolă incorectă
              * @example {
@@ -383,8 +504,8 @@ export interface operations {
              */
             401: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -393,34 +514,34 @@ export interface operations {
                      *       "error": "Unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     AuthController_refresh: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        requestBody?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Access token reînnoit cu succes */
             200: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: {
+                        data: {
                             /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-                            accessToken?: string
-                        }
-                    }
-                }
-            }
+                            accessToken: string;
+                        };
+                    };
+                };
+            };
             /**
              * @description Refresh token invalid, expirat sau lipsă din cookie
              * @example {
@@ -431,8 +552,8 @@ export interface operations {
              */
             401: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -441,34 +562,34 @@ export interface operations {
                      *       "error": "Unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     AuthController_logout: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        requestBody?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Deconectare reușită */
             200: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: {
+                        data: {
                             /** @example Deconectare reușită */
-                            message?: string
-                        }
-                    }
-                }
-            }
+                            message: string;
+                        };
+                    };
+                };
+            };
             /**
              * @description Neautorizat - Token invalid sau lipsă
              * @example {
@@ -479,8 +600,8 @@ export interface operations {
              */
             401: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -489,31 +610,31 @@ export interface operations {
                      *       "error": "Unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     AuthController_getMe: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
-        requestBody?: never
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Date utilizator returnate cu succes */
             200: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["UserResponseDto"]
-                    }
-                }
-            }
+                        data: components["schemas"]["UserResponseDto"];
+                    };
+                };
+            };
             /**
              * @description Neautorizat - Token invalid sau lipsă
              * @example {
@@ -524,8 +645,8 @@ export interface operations {
              */
             401: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -534,18 +655,18 @@ export interface operations {
                      *       "error": "Unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     AuthController_updateProfile: {
         parameters: {
-            query?: never
-            header?: never
-            path?: never
-            cookie?: never
-        }
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         requestBody: {
             content: {
                 "multipart/form-data": {
@@ -553,32 +674,32 @@ export interface operations {
                      * @description Numele utilizatorului
                      * @example John
                      */
-                    firstName?: string
+                    firstName?: string;
                     /**
                      * @description Prenumele utilizatorului
                      * @example Doe
                      */
-                    lastName?: string
+                    lastName?: string;
                     /**
                      * Format: binary
                      * @description Imaginea de profil (JPG, PNG, max 5MB)
                      */
-                    profileImage?: string
-                }
-            }
-        }
+                    profileImage?: string;
+                };
+            };
+        };
         responses: {
             /** @description Profil actualizat cu succes */
             200: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["UserResponseDto"]
-                    }
-                }
-            }
+                        data: components["schemas"]["UserResponseDto"];
+                    };
+                };
+            };
             /**
              * @description Date de validare invalide sau eroare la upload-ul imaginii
              * @example {
@@ -592,8 +713,8 @@ export interface operations {
              */
             400: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -605,9 +726,9 @@ export interface operations {
                      *       "error": "Bad Request"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
             /**
              * @description Neautorizat - Token invalid sau lipsă
              * @example {
@@ -618,8 +739,8 @@ export interface operations {
              */
             401: {
                 headers: {
-                    [name: string]: unknown
-                }
+                    [name: string]: unknown;
+                };
                 content: {
                     /**
                      * @example {
@@ -628,9 +749,484 @@ export interface operations {
                      *       "error": "Unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponseDto"]
-                }
-            }
-        }
-    }
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    CategoryController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lista de categorii */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CategoryResponseDto"][];
+                    };
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    CategoryController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryDto"];
+            };
+        };
+        responses: {
+            /** @description Categoria a fost creată */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CategoryResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Date de validare invalide
+             * @example {
+             *       "statusCode": 400,
+             *       "message": [
+             *         "slug must match the following pattern...",
+             *         "name must be longer than or equal to 2 characters"
+             *       ],
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": [
+                     *         "slug must match the following pattern...",
+                     *         "name must be longer than or equal to 2 characters"
+                     *       ],
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot crea categorii
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Slug-ul există deja
+             * @example {
+             *       "statusCode": 409,
+             *       "message": "O categorie cu slug-ul \"pizza-clasica\" există deja",
+             *       "error": "Conflict"
+             *     }
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "O categorie cu slug-ul \"pizza-clasica\" există deja",
+                     *       "error": "Conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    CategoryController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Categoria a fost găsită */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CategoryResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Categoria nu a fost găsită
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    CategoryController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Categoria a fost ștearsă */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot șterge categorii
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Categoria nu a fost găsită
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    CategoryController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCategoryDto"];
+            };
+        };
+        responses: {
+            /** @description Categoria a fost actualizată */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CategoryResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Date de validare invalide
+             * @example {
+             *       "statusCode": 400,
+             *       "message": [
+             *         "slug must match the following pattern..."
+             *       ],
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": [
+                     *         "slug must match the following pattern..."
+                     *       ],
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot actualiza categorii
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Categoria nu a fost găsită
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Slug-ul există deja
+             * @example {
+             *       "statusCode": 409,
+             *       "message": "O categorie cu slug-ul \"pizza-clasica\" există deja",
+             *       "error": "Conflict"
+             *     }
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "O categorie cu slug-ul \"pizza-clasica\" există deja",
+                     *       "error": "Conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
 }

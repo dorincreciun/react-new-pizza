@@ -13,17 +13,17 @@ export type UserEntity = {
      * @description Numele utilizatorului
      * @example John
      */
-    firstName?: string
+    firstName: string | null
     /**
      * @description Prenumele utilizatorului
      * @example Doe
      */
-    lastName?: string
+    lastName: string | null
     /**
      * @description URL-ul imaginii de profil
      * @example https://example.com/profile.jpg
      */
-    profileImage?: string
+    profileImage: string | null
     /**
      * @description Rolul utilizatorului în sistem
      * @example USER

@@ -1,13 +1,14 @@
-import type { UserEntity } from "@entities/user/model/types"
-
 import { apiClient } from "@shared/lib"
+import type { ApiSchema } from "@shared/types"
 
-export const getUser = async (): Promise<UserEntity> => {
+export const getUser = async (): Promise<ApiSchema<'UserResponseDto'>> => {
     const { data, error } = await apiClient.GET("/auth/me")
 
-    if (error || !data?.data) {
+    const user = data?.data
+
+    if (error || !user) {
         throw error || new Error("No data returned")
     }
 
-    return data.data
+    return user
 }
