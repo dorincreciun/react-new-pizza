@@ -5,12 +5,14 @@ import type { ApiSchema } from "@shared/types"
 
 import { getProducts } from "../api/get-products"
 import { mapDtoProduct } from "../model/map-dto-product"
-import type { ProductEntity } from "../model/types"
 
-export const useProducts = (categoryId?: number) => {
+export const useProducts = (categoryId?: number, page?: number) => {
     return useQuery({
-        queryKey: QueryKeys.productsList(categoryId),
-        queryFn: (): Promise<ApiSchema<"ProductResponseDto">[]> => getProducts(categoryId),
-        select: (data): ProductEntity[] => data.map(mapDtoProduct),
+        queryKey: QueryKeys.productsList(categoryId, page),
+        queryFn: (): Promise<ApiSchema<"ProductListResponseDto">> => getProducts(categoryId, page),
+        select: ({ data, meta }) => ({
+            data: data.map(mapDtoProduct),
+            meta,
+        }),
     })
 }

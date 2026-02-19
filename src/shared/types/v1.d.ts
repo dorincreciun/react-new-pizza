@@ -185,7 +185,7 @@ export interface paths {
         };
         /**
          * Lista produse
-         * @description Fără categoryId: returnează toate produsele, indiferent de categorie. Cu categoryId: returnează doar produsele din categoria respectivă. Rută publică – nu necesită autentificare.
+         * @description Returnează lista de produse cu suport pentru filtrare și paginare. Poți filtra după categoryId, types, ingredients, sizes. Rută publică – nu necesită autentificare.
          */
         get: operations["ProductController_findAll"];
         put?: never;
@@ -504,6 +504,29 @@ export interface components {
              * @example 2024-01-15T10:30:00.000Z
              */
             updatedAt: string;
+        };
+        PaginatedMetaDto: {
+            /**
+             * @description Numărul total de înregistrări care corespund filtrelor
+             * @example 50
+             */
+            total: number;
+            /**
+             * @description Numărul paginii curente
+             * @example 1
+             */
+            page: number;
+            /**
+             * @description Numărul de înregistrări per pagină
+             * @example 10
+             */
+            limit: number;
+        };
+        ProductListResponseDto: {
+            /** @description Lista de produse */
+            data: components["schemas"]["ProductResponseDto"][];
+            /** @description Meta-informații pentru paginare */
+            meta: components["schemas"]["PaginatedMetaDto"];
         };
         FilterOptionDto: {
             /**
@@ -1527,6 +1550,16 @@ export interface operations {
             query?: {
                 /** @description Opțional. Dacă lipsește – toate produsele. Dacă este indicat – doar produsele din acea categorie. */
                 categoryId?: number;
+                /** @description Opțional. Numărul paginii (default: 1). Minim: 1. */
+                page?: number;
+                /** @description Opțional. Numărul de produse per pagină (default: 10). Minim: 1, Maxim: 100. */
+                limit?: number;
+                /** @description Opțional. Array de mărimi pentru filtrare. Exemplu: ?sizes=mică&sizes=medie */
+                sizes?: unknown[];
+                /** @description Opțional. Array de ingrediente pentru filtrare. Exemplu: ?ingredients=roșii&ingredients=mozzarella */
+                ingredients?: unknown[];
+                /** @description Opțional. Array de tipuri de produse pentru filtrare. Valori posibile: SIMPLE, CONFIGURABLE. Exemplu: ?types=SIMPLE&types=CONFIGURABLE */
+                types?: unknown[];
             };
             header?: never;
             path?: never;
@@ -1534,15 +1567,36 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Lista de produse */
+            /** @description Lista de produse cu meta informații pentru paginare */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["ProductResponseDto"][];
-                    };
+                    "application/json": components["schemas"]["ProductListResponseDto"];
+                };
+            };
+            /**
+             * @description Parametri invalizi (categoryId, page sau limit nu sunt numere valide)
+             * @example {
+             *       "statusCode": 400,
+             *       "message": "categoryId trebuie să fie un număr valid",
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": "categoryId trebuie să fie un număr valid",
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
             /**
