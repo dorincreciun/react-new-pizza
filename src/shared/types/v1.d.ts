@@ -133,7 +133,7 @@ export interface paths {
         };
         /**
          * Lista categorii
-         * @description Returnează toate categoriile (fără query params).
+         * @description Returnează toate categoriile. Rută publică – nu necesită autentificare.
          */
         get: operations["CategoryController_findAll"];
         put?: never;
@@ -157,7 +157,7 @@ export interface paths {
         };
         /**
          * Detalii categorie
-         * @description Returnează o categorie după ID.
+         * @description Returnează o categorie după ID. Rută publică – nu necesită autentificare.
          */
         get: operations["CategoryController_findOne"];
         put?: never;
@@ -174,6 +174,78 @@ export interface paths {
          * @description Actualizează o categorie existentă. Toate câmpurile sunt opționale.
          */
         patch: operations["CategoryController_update"];
+        trace?: never;
+    };
+    "/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista produse
+         * @description Fără categoryId: returnează toate produsele, indiferent de categorie. Cu categoryId: returnează doar produsele din categoria respectivă. Rută publică – nu necesită autentificare.
+         */
+        get: operations["ProductController_findAll"];
+        put?: never;
+        /**
+         * Creare produs
+         * @description Creează un produs nou. Slug-ul trebuie să fie unic. Categoria trebuie să existe.
+         */
+        post: operations["ProductController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/filters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Filtre disponibile pentru produse
+         * @description Fără categoryId: returnează filtrele pentru toate produsele ACTIVE. Cu categoryId: returnează filtrele doar pentru produsele ACTIVE din categoria respectivă. Status nu este expus în filtre (doar produsele active sunt disponibile pentru client). Rută publică – nu necesită autentificare.
+         */
+        get: operations["ProductController_getFilters"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalii produs
+         * @description Returnează un produs după ID. Rută publică – nu necesită autentificare.
+         */
+        get: operations["ProductController_findOne"];
+        put?: never;
+        post?: never;
+        /**
+         * Ștergere produs
+         * @description Șterge un produs.
+         */
+        delete: operations["ProductController_remove"];
+        options?: never;
+        head?: never;
+        /**
+         * Actualizare produs
+         * @description Actualizează un produs existent. Toate câmpurile sunt opționale.
+         */
+        patch: operations["ProductController_update"];
         trace?: never;
     };
 }
@@ -353,6 +425,273 @@ export interface components {
              * @enum {string}
              */
             status?: "ACTIVE" | "INACTIVE";
+        };
+        ProductResponseDto: {
+            /**
+             * @description ID-ul unic al produsului
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Slug-ul unic al produsului (URL-friendly)
+             * @example margherita
+             */
+            slug: string;
+            /**
+             * @description Numele produsului
+             * @example Pizza Margherita
+             */
+            name: string;
+            /**
+             * @description Descrierea produsului
+             * @example Pizza clasică cu roșii și mozzarella
+             */
+            description: string | null;
+            /**
+             * @description Prețul produsului
+             * @example 24.99
+             */
+            price: number;
+            /**
+             * @description URL-ul imaginii produsului
+             * @example https://example.com/images/margherita.jpg
+             */
+            imageUrl: string | null;
+            /**
+             * @description Tipul produsului
+             * @example SIMPLE
+             * @enum {string}
+             */
+            type: "SIMPLE" | "CONFIGURABLE";
+            /**
+             * @description Statutul produsului (activ/inactiv)
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE";
+            /**
+             * @description ID-ul categoriei
+             * @example 1
+             */
+            categoryId: number;
+            /** @description Categoria produsului */
+            category: components["schemas"]["CategoryResponseDto"] | null;
+            /**
+             * @description Lista de ingrediente
+             * @example [
+             *       "roșii",
+             *       "mozzarella",
+             *       "busuioc"
+             *     ]
+             */
+            ingredients: string[];
+            /**
+             * @description Lista de mărimi disponibile
+             * @example [
+             *       "mică",
+             *       "medie",
+             *       "mare"
+             *     ]
+             */
+            sizes: string[];
+            /**
+             * @description Data și ora creării (format ISO 8601)
+             * @example 2024-01-15T10:30:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description Data și ora ultimei actualizări (format ISO 8601)
+             * @example 2024-01-15T10:30:00.000Z
+             */
+            updatedAt: string;
+        };
+        FilterOptionDto: {
+            /**
+             * @description Valoarea tehnică a filtrului (trimisă la server)
+             * @example CONFIGURABLE
+             */
+            id: string;
+            /**
+             * @description Eticheta formatată pentru afișare în UI
+             * @example Personalizabil
+             */
+            name: string;
+        };
+        ProductFiltersResponseDto: {
+            /**
+             * @description Tipuri de produse disponibile (SIMPLE/CONFIGURABLE)
+             * @example [
+             *       {
+             *         "id": "SIMPLE",
+             *         "name": "Simplu"
+             *       },
+             *       {
+             *         "id": "CONFIGURABLE",
+             *         "name": "Personalizabil"
+             *       }
+             *     ]
+             */
+            types: components["schemas"]["FilterOptionDto"][];
+            /**
+             * @description Ingrediente disponibile în produsele filtrate
+             * @example [
+             *       {
+             *         "id": "roșii",
+             *         "name": "Roșii"
+             *       },
+             *       {
+             *         "id": "mozzarella",
+             *         "name": "Mozzarella"
+             *       },
+             *       {
+             *         "id": "busuioc",
+             *         "name": "Busuioc"
+             *       }
+             *     ]
+             */
+            ingredients: components["schemas"]["FilterOptionDto"][];
+            /**
+             * @description Mărimi disponibile în produsele filtrate
+             * @example [
+             *       {
+             *         "id": "mică",
+             *         "name": "Mică"
+             *       },
+             *       {
+             *         "id": "medie",
+             *         "name": "Medie"
+             *       },
+             *       {
+             *         "id": "mare",
+             *         "name": "Mare"
+             *       }
+             *     ]
+             */
+            sizes: components["schemas"]["FilterOptionDto"][];
+        };
+        CreateProductDto: {
+            /**
+             * @description Identificator unic URL-friendly pentru produs (kebab-case)
+             * @example margherita
+             */
+            slug: string;
+            /**
+             * @description Numele afișat al produsului
+             * @example Pizza Margherita
+             */
+            name: string;
+            /**
+             * @description Descrierea produsului
+             * @example Pizza clasică cu roșii și mozzarella
+             */
+            description?: string;
+            /**
+             * @description Prețul produsului
+             * @example 24.99
+             */
+            price: number;
+            /**
+             * @description URL-ul imaginii produsului
+             * @example https://example.com/images/margherita.jpg
+             */
+            imageUrl?: string;
+            /**
+             * @description Tipul produsului. Implicit: SIMPLE
+             * @example SIMPLE
+             * @enum {string}
+             */
+            type?: "SIMPLE" | "CONFIGURABLE";
+            /**
+             * @description Statutul produsului (activ/inactiv). Implicit: ACTIVE
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE";
+            /**
+             * @description ID-ul categoriei căreia îi aparține produsul
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * @description Lista de ingrediente
+             * @example [
+             *       "roșii",
+             *       "mozzarella",
+             *       "busuioc"
+             *     ]
+             */
+            ingredients?: string[];
+            /**
+             * @description Lista de mărimi disponibile
+             * @example [
+             *       "mică",
+             *       "medie",
+             *       "mare"
+             *     ]
+             */
+            sizes?: string[];
+        };
+        UpdateProductDto: {
+            /**
+             * @description Identificator unic URL-friendly pentru produs (kebab-case)
+             * @example margherita
+             */
+            slug?: string;
+            /**
+             * @description Numele afișat al produsului
+             * @example Pizza Margherita
+             */
+            name?: string;
+            /**
+             * @description Descrierea produsului
+             * @example Pizza clasică cu roșii și mozzarella
+             */
+            description?: string;
+            /**
+             * @description Prețul produsului
+             * @example 24.99
+             */
+            price?: number;
+            /**
+             * @description URL-ul imaginii produsului
+             * @example https://example.com/images/margherita.jpg
+             */
+            imageUrl?: string;
+            /**
+             * @description Tipul produsului. Implicit: SIMPLE
+             * @example SIMPLE
+             * @enum {string}
+             */
+            type?: "SIMPLE" | "CONFIGURABLE";
+            /**
+             * @description Statutul produsului (activ/inactiv). Implicit: ACTIVE
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE";
+            /**
+             * @description ID-ul categoriei căreia îi aparține produsul
+             * @example 1
+             */
+            categoryId?: number;
+            /**
+             * @description Lista de ingrediente
+             * @example [
+             *       "roșii",
+             *       "mozzarella",
+             *       "busuioc"
+             *     ]
+             */
+            ingredients?: string[];
+            /**
+             * @description Lista de mărimi disponibile
+             * @example [
+             *       "mică",
+             *       "medie",
+             *       "mare"
+             *     ]
+             */
+            sizes?: string[];
         };
     };
     responses: never;
@@ -774,29 +1113,6 @@ export interface operations {
                     };
                 };
             };
-            /**
-             * @description Neautorizat
-             * @example {
-             *       "statusCode": 401,
-             *       "message": "Token invalid sau expirat",
-             *       "error": "Unauthorized"
-             *     }
-             */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "statusCode": 401,
-                     *       "message": "Token invalid sau expirat",
-                     *       "error": "Unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
         };
     };
     CategoryController_create: {
@@ -943,29 +1259,6 @@ export interface operations {
                     "application/json": {
                         data: components["schemas"]["CategoryResponseDto"];
                     };
-                };
-            };
-            /**
-             * @description Neautorizat
-             * @example {
-             *       "statusCode": 401,
-             *       "message": "Token invalid sau expirat",
-             *       "error": "Unauthorized"
-             *     }
-             */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "statusCode": 401,
-                     *       "message": "Token invalid sau expirat",
-                     *       "error": "Unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
             /**
@@ -1221,6 +1514,528 @@ export interface operations {
                      * @example {
                      *       "statusCode": 409,
                      *       "message": "O categorie cu slug-ul \"pizza-clasica\" există deja",
+                     *       "error": "Conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Opțional. Dacă lipsește – toate produsele. Dacă este indicat – doar produsele din acea categorie. */
+                categoryId?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lista de produse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProductResponseDto"][];
+                    };
+                };
+            };
+            /**
+             * @description Categoria specificată nu a fost găsită
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProductDto"];
+            };
+        };
+        responses: {
+            /** @description Produsul a fost creat */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProductResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Date de validare invalide sau categoria nu există
+             * @example {
+             *       "statusCode": 400,
+             *       "message": [
+             *         "price must be a positive number",
+             *         "Categoria cu ID-ul 999 nu există"
+             *       ],
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": [
+                     *         "price must be a positive number",
+                     *         "Categoria cu ID-ul 999 nu există"
+                     *       ],
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot crea produse
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Slug-ul există deja
+             * @example {
+             *       "statusCode": 409,
+             *       "message": "Un produs cu slug-ul \"margherita\" există deja",
+             *       "error": "Conflict"
+             *     }
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "Un produs cu slug-ul \"margherita\" există deja",
+                     *       "error": "Conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_getFilters: {
+        parameters: {
+            query?: {
+                /** @description Opțional. Dacă lipsește – filtre pentru toate produsele ACTIVE. Dacă este indicat – filtre doar pentru produsele ACTIVE din acea categorie. */
+                categoryId?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Filtrele disponibile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProductFiltersResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description categoryId invalid
+             * @example {
+             *       "statusCode": 400,
+             *       "message": "categoryId trebuie să fie un număr valid",
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": "categoryId trebuie să fie un număr valid",
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Categoria specificată nu a fost găsită
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Produsul a fost găsit */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProductResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Produsul nu a fost găsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Produsul a fost șters */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot șterge produse
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Produsul nu a fost găsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProductDto"];
+            };
+        };
+        responses: {
+            /** @description Produsul a fost actualizat */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProductResponseDto"];
+                    };
+                };
+            };
+            /**
+             * @description Date de validare invalide sau categoria nu există
+             * @example {
+             *       "statusCode": 400,
+             *       "message": "Categoria cu ID-ul 999 nu există",
+             *       "error": "Bad Request"
+             *     }
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": "Categoria cu ID-ul 999 nu există",
+                     *       "error": "Bad Request"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot actualiza produse
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Produsul nu a fost găsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Produsul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Slug-ul există deja
+             * @example {
+             *       "statusCode": 409,
+             *       "message": "Un produs cu slug-ul \"margherita\" există deja",
+             *       "error": "Conflict"
+             *     }
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "Un produs cu slug-ul \"margherita\" există deja",
                      *       "error": "Conflict"
                      *     }
                      */
