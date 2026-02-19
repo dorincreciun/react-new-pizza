@@ -1,15 +1,13 @@
-import { type FilterOption, useProductsFilters } from "@entities/product"
+import { useProductsFilters } from "@entities/product"
 
-import { Title } from "@shared/ui"
-import { Checkbox, CheckboxGroupSkeleton } from "@shared/ui/checkbox"
+import { Button, Title } from "@shared/ui"
+
+import { FilterSection } from "./filter-section"
+import { ProductFilterSkeleton } from "./product-filter-skeleton"
 
 export const ProductFilter = () => {
-    // Scoatem și isError, și error pentru a vedea ce se întâmplă
     const { data, isLoading, isError, error } = useProductsFilters()
 
-    console.log("React Query Status:", { isLoading, isError, error, data })
-
-    // Dacă este eroare, afișăm eroarea, nu skeletonul!
     if (isError) {
         return <div className="text-red-500">A apărut o eroare: {error?.message}</div>
     }
@@ -17,7 +15,7 @@ export const ProductFilter = () => {
     if (isLoading || !data) {
         return (
             <div className="w-56 shrink-0">
-                <CheckboxGroupSkeleton />
+                <ProductFilterSkeleton />
             </div>
         )
     }
@@ -25,30 +23,25 @@ export const ProductFilter = () => {
     const { types, sizes, ingredients } = data
 
     return (
-        <div className="w-56 shrink-0">
-            {/* Types */}
-            <div className="flex flex-col gap-3.5">
-                <Title as={"h3"}>Types</Title>
-                {types.map(({ id, name }: FilterOption) => (
-                    <Checkbox key={id} label={name} />
-                ))}
+        <div className="w-56 shrink-0 space-y-7.5">
+            <Title as={"h2"} size={"sm"}>
+                Фильтрация
+            </Title>
+
+            <div>
+                {/* Types */}
+                <FilterSection data={types} />
+
+                {/* Sizes */}
+                <FilterSection title="Sizes" data={sizes} />
+
+                {/* Ingredients */}
+                <FilterSection title="Ingredients" data={ingredients} />
             </div>
 
-            {/* Sizes */}
-            <div className="flex flex-col gap-3.5">
-                <Title as={"h3"}>Sizes</Title>
-                {sizes.map(({ id, name }: FilterOption) => (
-                    <Checkbox key={id} label={name} />
-                ))}
-            </div>
-
-            {/* Ingredients */}
-            <div className="flex flex-col gap-3.5">
-                <Title as={"h3"}>Ingredients</Title>
-                {ingredients.map(({ id, name }: FilterOption) => (
-                    <Checkbox key={id} label={name} />
-                ))}
-            </div>
+            <Button size="lg" className="w-full">
+                Применить
+            </Button>
         </div>
     )
 }
