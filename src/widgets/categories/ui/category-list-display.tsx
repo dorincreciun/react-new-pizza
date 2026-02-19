@@ -2,7 +2,7 @@ import { ArrowDown } from "lucide-react"
 import { useLocation } from "react-router"
 
 
-import type { CategoryType } from "@entities/category"
+import type { CategoryEntity } from "@entities/category"
 
 import { Dropdown, usePriorityContext, PriorityNavigation } from "@shared/ui"
 import { cn } from "@shared/utils"
@@ -10,7 +10,7 @@ import { cn } from "@shared/utils"
 import { CategoryItem } from "./category-item"
 
 interface Props {
-    categories: CategoryType[]
+    categories: CategoryEntity[]
 }
 
 export const CategoryListDisplay = ({ categories }: Props) => {
