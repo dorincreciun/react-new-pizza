@@ -80,8 +80,13 @@ export const CategoryListDisplay = ({ categories }: Props) => {
                             {item.map((item) => (
                                 <Dropdown.Item
                                     key={item.slug}
-                                    className="rounded-lg p-2 hover:bg-orange-50"
                                     onClick={() => handleCategoryClick(item.id)}
+                                    className={cn(
+                                        "flex cursor-pointer items-center justify-between rounded-xl px-4 py-3",
+                                        checkActiveCategory(item.id)
+                                            ? "bg-[#FE5F00]/10 text-[#FE5F00]"
+                                            : "hover:bg-[#FAFAFA]",
+                                    )}
                                 >
                                     {item.name}
                                 </Dropdown.Item>

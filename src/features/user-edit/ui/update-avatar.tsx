@@ -7,7 +7,7 @@ import { Button } from "@shared/ui"
 export const UpdateAvatar = () => {
     return (
         <div className="relative">
-            <UserAvatar />
+            <UserAvatar className={'size-24'} />
             <Button
                 onlyIcon
                 size={'sm'}

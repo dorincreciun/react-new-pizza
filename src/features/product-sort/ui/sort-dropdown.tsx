@@ -1,12 +1,10 @@
 import { ArrowDownUp, Check } from "lucide-react"
 
-
 import { Dropdown } from "@shared/ui"
 import { cn } from "@shared/utils"
 
 import { useProductSort } from "../lib/use-product-sort"
 import type { SortOption } from "../model/types"
-
 
 const SORT_OPTIONS: SortOption[] = [
     { value: "rating", label: "рейтингу" },
@@ -44,19 +42,18 @@ export const SortDropdown = () => {
                         const isActive = option.value === sort
 
                         return (
-                            <Dropdown.Item key={option.value}>
-                                <li
-                                    onClick={() => setSort(option.value)}
-                                    className={cn(
-                                        "flex cursor-pointer items-center justify-between rounded-xl px-4 py-3",
-                                        isActive
-                                            ? "bg-[#FE5F00]/10 text-[#FE5F00]"
-                                            : "hover:bg-[#FAFAFA]",
-                                    )}
-                                >
-                                    {option.label}
-                                    {isActive && <Check size={16} />}
-                                </li>
+                            <Dropdown.Item
+                                key={option.value}
+                                onClick={() => setSort(option.value)}
+                                className={cn(
+                                    "flex cursor-pointer items-center justify-between rounded-xl px-4 py-3",
+                                    isActive
+                                        ? "bg-[#FE5F00]/10 text-[#FE5F00]"
+                                        : "hover:bg-[#FAFAFA]",
+                                )}
+                            >
+                                {option.label}
+                                {isActive && <Check size={16} />}
                             </Dropdown.Item>
                         )
                     })}

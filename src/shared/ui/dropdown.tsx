@@ -9,7 +9,12 @@ import {
     useState,
 } from "react"
 
-/* Dropdown Context */
+import { Slot } from "@radix-ui/react-slot"
+
+import { cn } from "@shared/utils"
+
+// --- TYPES & CONTEXT ---
+
 interface DropdownContextProps {
     isOpen: boolean
     toggle: () => void
@@ -18,24 +23,27 @@ interface DropdownContextProps {
 
 const DropdownContext = createContext<DropdownContextProps | null>(null)
 
-/* Dropdown Hook */
 const useDropdownContext = () => {
     const ctx = useContext(DropdownContext)
     if (!ctx) {
-        throw new Error("useDropdownContext must be used within DropdownContext")
+        throw new Error("useDropdownContext must be used within Dropdown")
     }
     return ctx
 }
 
-/* DropdownTrigger */
-type NativeButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className">
+// --- COMPONENTS ---
 
-interface DropdownTriggerProps extends NativeButtonProps {
-    className?: ((state: { isOpen: boolean }) => string | undefined) | (string | undefined)
+/**
+ * TRIGGER: Activează/Dezactivează meniul.
+ * Folosește Slot pentru a fuziona cu elementul copil (ex: UserAvatar).
+ */
+interface DropdownTriggerProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
+    className?: ((state: { isOpen: boolean }) => string | undefined) | string
     ref?: Ref<HTMLButtonElement>
+    asChild?: boolean
 }
 
-const DropdownTrigger = ({ onClick, className, ...rest }: DropdownTriggerProps) => {
+const DropdownTrigger = ({ onClick, className, asChild, ref, ...rest }: DropdownTriggerProps) => {
     const { toggle, isOpen } = useDropdownContext()
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -44,72 +52,110 @@ const DropdownTrigger = ({ onClick, className, ...rest }: DropdownTriggerProps) 
         toggle()
     }
 
+    const baseStyles = "cursor-pointer outline-hidden transition-transform duration-200"
     const resolvedClassName = typeof className === "function" ? className({ isOpen }) : className
 
+    const Component = asChild ? Slot : "button"
+
     return (
-        <button
+        <Component
+            ref={ref}
+            type={asChild ? undefined : "button"}
             onClick={handleClick}
-            className={resolvedClassName}
+            className={cn(baseStyles, resolvedClassName)}
             aria-expanded={isOpen}
-            data-open={isOpen ? "true" : "false"}
+            data-state={isOpen ? "open" : "closed"}
             {...rest}
         />
     )
 }
 
-/* DropdownItem */
-type NativeDropdownItemProps = ButtonHTMLAttributes<HTMLDivElement>
-
-const DropdownItem = ({ onClick, ...rest }: NativeDropdownItemProps) => {
-    const { closeOnSelect, toggle } = useDropdownContext()
-    return (
-        <div
-            onClick={(event) => {
-                if (closeOnSelect) {
-                    toggle()
-                }
-                onClick?.(event)
-            }}
-            {...rest}
-        />
-    )
+/**
+ * CONTENT: Containerul pentru elementele meniului.
+ * Include animația de zoom-in la montare.
+ */
+interface DropdownContentProps extends Omit<HTMLAttributes<HTMLDivElement>, "className"> {
+    className?: ((state: { isOpen: boolean }) => string | undefined) | string
 }
 
-/* DropdownContent */
-type NativeDropdownProps = Omit<HTMLAttributes<HTMLDivElement>, "className">
-
-interface DropdownContentProps extends NativeDropdownProps {
-    className?: ((state: { isOpen: boolean }) => string | undefined) | (string | undefined)
-}
-
-function DropdownContent({ className, ...rest }: DropdownContentProps) {
+const DropdownContent = ({ className, ...rest }: DropdownContentProps) => {
     const { isOpen } = useDropdownContext()
 
     if (!isOpen) return null
 
+    const baseStyles = cn(
+        "absolute right-0 z-50 mt-3 w-64 origin-top-right overflow-hidden rounded-2xl bg-white p-1.5 shadow-2xl ring-1 ring-black/5",
+        "animate-zoom-in", // Asigură-te că ai definit-o în CSS sau config
+    )
+
     const resolvedClassName = typeof className === "function" ? className({ isOpen }) : className
 
-    return <div className={resolvedClassName} {...rest} />
+    return <div className={cn(baseStyles, resolvedClassName)} {...rest} />
 }
 
-/* DropdownRoot */
+/**
+ * ITEM: Element individual din meniu.
+ */
+interface DropdownItemProps extends HTMLAttributes<HTMLDivElement> {
+    asChild?: boolean
+}
+
+const DropdownItem = ({ onClick, className, asChild, ...rest }: DropdownItemProps) => {
+    const { closeOnSelect, toggle } = useDropdownContext()
+
+    const Component = asChild ? Slot : "div"
+
+    const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+        onClick?.(event)
+
+        if (closeOnSelect && !event.defaultPrevented) {
+            toggle()
+        }
+    }
+
+    return (
+        <Component
+            role="menuitem"
+            className={cn(
+                "flex w-full cursor-pointer items-center rounded-xl px-3 py-2 text-sm font-medium text-gray-700 outline-hidden transition-colors hover:bg-orange-50 hover:text-[#FE5F00]",
+                className,
+            )}
+            onClick={handleClick}
+            {...rest}
+        />
+    )
+}
+
+/**
+ * ROOT: Componenta părinte care gestionează starea.
+ */
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
     defaultOpen?: boolean
-    children: ReactNode
     closeOnSelect?: boolean
+    children: ReactNode
 }
 
-const DropdownRoot = ({ defaultOpen, children, closeOnSelect, ...rest }: DropdownProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(defaultOpen ?? false)
+const DropdownRoot = ({
+    defaultOpen = false,
+    closeOnSelect = true,
+    children,
+    className,
+    ...rest
+}: DropdownProps) => {
+    const [isOpen, setIsOpen] = useState<boolean>(defaultOpen)
     const toggle = () => setIsOpen((prev) => !prev)
+
     return (
-        <DropdownContext value={{ isOpen, toggle, closeOnSelect: closeOnSelect ?? false }}>
-            <div {...rest}>{children}</div>
+        <DropdownContext value={{ isOpen, toggle, closeOnSelect }}>
+            <div className={cn("relative inline-block text-left", className)} {...rest}>
+                {children}
+            </div>
         </DropdownContext>
     )
 }
 
-/* Dropdown API */
+// --- EXPORT API ---
+
 export const Dropdown = Object.assign(DropdownRoot, {
     Trigger: DropdownTrigger,
     Content: DropdownContent,

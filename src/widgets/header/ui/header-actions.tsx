@@ -1,5 +1,5 @@
 import { LoginButton } from "@features/auth/login"
-import { LogoutButton } from "@features/auth/logout"
+import { UserProfileMenu } from "@features/user-profile-menu"
 
 import { ToggleCart } from "@entities/cart"
 import { useUser } from "@entities/user"
@@ -10,7 +10,7 @@ export const HeaderActions = () => {
     return (
         <div className="flex items-center gap-4">
             <ToggleCart />
-            {user ? <LogoutButton /> : <LoginButton />}
+            {user ? <UserProfileMenu /> : <LoginButton />}
         </div>
     )
 }
