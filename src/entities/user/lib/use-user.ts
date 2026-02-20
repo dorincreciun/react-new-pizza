@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 
-import { getUser, useAuthStore } from "@entities/user"
-import { mapDtoUser } from "@entities/user/model/map-dto-user"
-
 import { QueryKeys } from "@shared/const"
 import type { ApiSchema } from "@shared/types"
 
+import { useAuthStore } from "./use-auth-store"
+import { getUser } from "../api/get-user"
+import { mapDtoUser } from "../model/map-dto-user"
 import type { UserEntity } from "../model/types"
 
 export const useUser = (): UserEntity | null => {
