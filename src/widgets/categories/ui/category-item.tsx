@@ -1,20 +1,18 @@
 import type { Ref } from "react"
 
-import { Link } from "react-router"
-
 import { cn } from "@shared/utils"
 
 interface Props {
     name: string
-    slug: string
     isActive: boolean
-    ref?: Ref<HTMLAnchorElement>
+    onClick: () => void
+    ref?: Ref<HTMLButtonElement>
 }
 
-export const CategoryItem = ({ name, slug, isActive, ...rest }: Props) => {
+export const CategoryItem = ({ name, isActive, ...rest }: Props) => {
     return (
-        <Link
-            to={`/${slug}`}
+        <button
+            type="button"
             className={cn(
                 // Layout & Sizing
                 "flex h-full flex-1 shrink-0 items-center justify-center",
@@ -36,6 +34,6 @@ export const CategoryItem = ({ name, slug, isActive, ...rest }: Props) => {
             {...rest}
         >
             {name}
-        </Link>
+        </button>
     )
 }

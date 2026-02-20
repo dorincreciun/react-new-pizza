@@ -1,10 +1,9 @@
 import { ArrowDown } from "lucide-react"
-import { useLocation } from "react-router"
-
 
 import type { CategoryEntity } from "@entities/category"
 
-import { Dropdown, usePriorityContext, PriorityNavigation } from "@shared/ui"
+import { useQueryParams, useSetQueryParams } from "@shared/lib"
+import { Dropdown, PriorityNavigation, usePriorityContext } from "@shared/ui"
 import { cn } from "@shared/utils"
 
 import { CategoryItem } from "./category-item"
@@ -14,8 +13,22 @@ interface Props {
 }
 
 export const CategoryListDisplay = ({ categories }: Props) => {
-    const { pathname } = useLocation()
     const { moreButtonRef } = usePriorityContext()
+    const setParam = useSetQueryParams()
+    const queryParams = useQueryParams<{ categoryId: number }>()
+
+    const checkActiveCategory = (id: number) => {
+        const activeId = queryParams.categoryId ?? -1
+        return activeId === id
+    }
+
+    const handleCategoryClick = (id: number) => {
+        if (id === -1) {
+            setParam({ categoryId: null })
+        } else {
+            setParam({ categoryId: id })
+        }
+    }
 
     return (
         <PriorityNavigation.Main
@@ -35,7 +48,12 @@ export const CategoryListDisplay = ({ categories }: Props) => {
             )}
             items={categories}
             renderItem={(item) => (
-                <CategoryItem key={item.slug} isActive={pathname === `/${item.slug}`} {...item} />
+                <CategoryItem
+                    key={item.slug}
+                    isActive={checkActiveCategory(item.id)}
+                    onClick={() => handleCategoryClick(item.id)}
+                    {...item}
+                />
             )}
             renderMore={(item) => {
                 return (
