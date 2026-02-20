@@ -1,3 +1,5 @@
+import { ProductFilterError } from "@widgets/product-filter/ui/product-filter-error"
+
 import { useProductsFilters } from "@entities/product"
 
 import { Button, Title } from "@shared/ui"
@@ -9,15 +11,11 @@ export const ProductFilter = () => {
     const { data, isLoading, isError, error } = useProductsFilters()
 
     if (isError) {
-        return <div className="text-red-500">A apărut o eroare: {error?.message}</div>
+        return <ProductFilterError error={error} />
     }
 
     if (isLoading || !data) {
-        return (
-            <div className="w-56 shrink-0">
-                <ProductFilterSkeleton />
-            </div>
-        )
+        return <ProductFilterSkeleton />
     }
 
     const { types, sizes, ingredients } = data

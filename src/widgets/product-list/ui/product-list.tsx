@@ -1,30 +1,32 @@
-import { useSearchParams } from "react-router"
+import { ProductListError } from "@widgets/product-list/ui/product-list-error"
+import { ProductListSkeleton } from "@widgets/product-list/ui/product-list-skeleton"
 
 import { Pagination } from "@features/pagination"
 
-import { ProductCard, ProductCardSkeleton, useProducts } from "@entities/product"
+import { ProductCard, useProducts } from "@entities/product"
+
+import { useQueryParams } from "@shared/lib"
+
+type ProductUrlParams = {
+    page: number
+    categoryId: number
+}
 
 export const ProductList = () => {
-    const [searchParams] = useSearchParams()
-    const page = Number(searchParams.get("page")) || 1
-    const category = Number(searchParams.get("categoryId"))
+    const queryParams = useQueryParams<ProductUrlParams>(["page", "categoryId"])
 
-    const { data: response, isLoading, isError } = useProducts(category, page)
+    const {
+        data: response,
+        isLoading,
+        isError,
+    } = useProducts(queryParams.categoryId, queryParams.page)
 
     if (isError) {
-        return (
-            <div className="flex-1 py-10 text-center text-red-500">
-                A apărut o eroare la încărcarea produselor.
-            </div>
-        )
+        return <ProductListError />
     }
 
     if (isLoading || !response) {
-        return (
-            <div className="grid flex-1 grid-cols-3 md:gap-5 lg:gap-8 xl:gap-10">
-                <ProductCardSkeleton count={6} />
-            </div>
-        )
+        return <ProductListSkeleton />
     }
 
     const { data: products, meta } = response
@@ -39,7 +41,7 @@ export const ProductList = () => {
 
     return (
         <div>
-            <div className="grid flex-1 grid-cols-3 md:gap-5 lg:gap-8 xl:gap-10 pb-15">
+            <div className="grid flex-1 md:grid-cols-2 lg:grid-cols-3 pb-15 md:gap-5 lg:gap-8 xl:gap-10">
                 {products.map((product) => (
                     <ProductCard
                         key={product.id}
