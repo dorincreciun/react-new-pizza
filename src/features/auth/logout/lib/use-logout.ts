@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { logout } from "@features/auth/logout"
-
 import { useAuthStore } from "@entities/user"
 
 import { QueryKeys } from "@shared/const"
+
+import { logout } from "../api/logout"
 
 export const useLogout = () => {
     const clearAuth = useAuthStore((s) => s.logout)

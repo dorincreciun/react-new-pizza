@@ -1,6 +1,6 @@
-import type { CategoryType } from "@entities/category"
+import type { CategoryEntity } from "./types"
 
-export const CUSTOM_CATEGORIES: CategoryType[] = [
+export const CUSTOM_CATEGORIES: CategoryEntity[] = [
     {
         id: -1,
         slug: "",

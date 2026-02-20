@@ -4,6 +4,7 @@ export { Portal } from "./portal"
 export { Overlay } from "./overlay"
 export {Title} from './title'
 export {StatCard} from './stat-card'
+export { Checkbox, CheckboxGroup, CheckboxGroupSkeleton } from "./checkbox"
 
 export { Input } from "./input"
 export { InfoCard } from "./info-card"
