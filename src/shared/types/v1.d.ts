@@ -507,20 +507,25 @@ export interface components {
         };
         PaginatedMetaDto: {
             /**
-             * @description Numărul total de înregistrări care corespund filtrelor
+             * @description Numărul total de înregistrări (itemuri) care corespund filtrelor
              * @example 50
              */
-            total: number;
+            totalItems: number;
             /**
-             * @description Numărul paginii curente
+             * @description Numărul paginii curente (1-based)
              * @example 1
              */
-            page: number;
+            currentPage: number;
             /**
-             * @description Numărul de înregistrări per pagină
+             * @description Numărul de înregistrări (itemuri) per pagină
              * @example 10
              */
-            limit: number;
+            itemsPerPage: number;
+            /**
+             * @description Numărul total de pagini disponibile. 0 dacă nu există înregistrări.
+             * @example 5
+             */
+            totalPages: number;
         };
         ProductListResponseDto: {
             /** @description Lista de produse */
@@ -1550,10 +1555,8 @@ export interface operations {
             query?: {
                 /** @description Opțional. Dacă lipsește – toate produsele. Dacă este indicat – doar produsele din acea categorie. */
                 categoryId?: number;
-                /** @description Opțional. Numărul paginii (default: 1). Minim: 1. */
+                /** @description Opțional. Numărul paginii (default: 1). Fiecare pagină are 10 produse. */
                 page?: number;
-                /** @description Opțional. Numărul de produse per pagină (default: 10). Minim: 1, Maxim: 100. */
-                limit?: number;
                 /** @description Opțional. Array de mărimi pentru filtrare. Exemplu: ?sizes=mică&sizes=medie */
                 sizes?: unknown[];
                 /** @description Opțional. Array de ingrediente pentru filtrare. Exemplu: ?ingredients=roșii&ingredients=mozzarella */
@@ -1577,7 +1580,7 @@ export interface operations {
                 };
             };
             /**
-             * @description Parametri invalizi (categoryId, page sau limit nu sunt numere valide)
+             * @description Parametri invalizi (categoryId sau page nu sunt numere valide)
              * @example {
              *       "statusCode": 400,
              *       "message": "categoryId trebuie să fie un număr valid",

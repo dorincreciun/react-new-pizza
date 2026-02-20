@@ -1,14 +1,19 @@
-import { ProductFilterError } from "@widgets/product-filter/ui/product-filter-error"
-
 import { useProductsFilters } from "@entities/product"
 
+import { useQueryParams } from "@shared/lib"
 import { Button, Title } from "@shared/ui"
 
 import { FilterSection } from "./filter-section"
+import { ProductFilterError } from "./product-filter-error"
 import { ProductFilterSkeleton } from "./product-filter-skeleton"
 
+type ProductUrlParams = {
+    categoryId: number
+}
+
 export const ProductFilter = () => {
-    const { data, isLoading, isError, error } = useProductsFilters()
+    const { categoryId } = useQueryParams<ProductUrlParams>()
+    const { data, isLoading, isError, error } = useProductsFilters(categoryId)
 
     if (isError) {
         return <ProductFilterError error={error} />

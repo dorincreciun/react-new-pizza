@@ -1,11 +1,12 @@
-import { ProductListError } from "@widgets/product-list/ui/product-list-error"
-import { ProductListSkeleton } from "@widgets/product-list/ui/product-list-skeleton"
-
 import { Pagination } from "@features/pagination"
 
 import { ProductCard, useProducts } from "@entities/product"
 
 import { useQueryParams } from "@shared/lib"
+
+import { ProductListEmpty } from "./product-list-empty"
+import { ProductListError } from "./product-list-error"
+import { ProductListSkeleton } from "./product-list-skeleton"
 
 type ProductUrlParams = {
     page: number
@@ -13,13 +14,9 @@ type ProductUrlParams = {
 }
 
 export const ProductList = () => {
-    const queryParams = useQueryParams<ProductUrlParams>(["page", "categoryId"])
+    const { categoryId, page } = useQueryParams<ProductUrlParams>(["page", "categoryId"])
 
-    const {
-        data: response,
-        isLoading,
-        isError,
-    } = useProducts(queryParams.categoryId, queryParams.page)
+    const { data: response, isLoading, isError } = useProducts(categoryId, page)
 
     if (isError) {
         return <ProductListError />
@@ -32,16 +29,12 @@ export const ProductList = () => {
     const { data: products, meta } = response
 
     if (products.length === 0) {
-        return (
-            <div className="flex-1 py-10 text-center font-medium text-gray-500">
-                Nu am găsit niciun produs conform filtrelor selectate.
-            </div>
-        )
+        return <ProductListEmpty />
     }
 
     return (
         <div>
-            <div className="grid flex-1 md:grid-cols-2 lg:grid-cols-3 pb-15 md:gap-5 lg:gap-8 xl:gap-10">
+            <div className="grid flex-1 pb-15 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-8 xl:gap-10">
                 {products.map((product) => (
                     <ProductCard
                         key={product.id}
@@ -53,7 +46,7 @@ export const ProductList = () => {
                     />
                 ))}
             </div>
-            <Pagination totalPages={meta.total} />
+            <Pagination totalPages={meta.totalPages} />
         </div>
     )
 }

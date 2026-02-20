@@ -1,12 +1,10 @@
 import { ArrowDown } from "lucide-react"
 
-import type { CategoryEntity } from "@entities/category"
+import { type CategoryEntity, CategoryItem } from "@entities/category"
 
 import { useQueryParams, useSetQueryParams } from "@shared/lib"
 import { Dropdown, PriorityNavigation, usePriorityContext } from "@shared/ui"
 import { cn } from "@shared/utils"
-
-import { CategoryItem } from "./category-item"
 
 interface Props {
     categories: CategoryEntity[]
@@ -83,6 +81,7 @@ export const CategoryListDisplay = ({ categories }: Props) => {
                                 <Dropdown.Item
                                     key={item.slug}
                                     className="rounded-lg p-2 hover:bg-orange-50"
+                                    onClick={() => handleCategoryClick(item.id)}
                                 >
                                     {item.name}
                                 </Dropdown.Item>

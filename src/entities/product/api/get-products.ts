@@ -6,7 +6,7 @@ export const getProducts = async (
     page?: number,
 ): Promise<ApiSchema<"ProductListResponseDto">> => {
     const { data, error } = await apiClient.GET("/products", {
-        ...(categoryId ? { params: { query: { categoryId, page } } } : {}),
+        params: { query: { categoryId, page } },
     })
 
     const products = data?.data
