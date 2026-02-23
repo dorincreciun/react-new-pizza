@@ -10,7 +10,6 @@ import { ProductDescription } from "./product-description"
 import { ProductImage } from "./product-image"
 import { ProductTitle } from "./product-title"
 
-
 const ProductSkeleton = () => {
     return (
         <Container className="mt-10 animate-pulse">
@@ -84,7 +83,9 @@ export const ProductPage = () => {
                                 {sizes && (
                                     <SegmentedControl className="max-w-105" options={sizes} />
                                 )}
-                                {ingredients.length > 0 && <IngredientSelect ingredients={ingredients} />}
+                                {ingredients.length > 0 && (
+                                    <IngredientSelect ingredients={ingredients} />
+                                )}
                             </section>
                         </div>
 
