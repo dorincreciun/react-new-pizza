@@ -176,6 +176,49 @@ export interface paths {
         patch: operations["CategoryController_update"];
         trace?: never;
     };
+    "/ingredients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista ingrediente
+         * @description Toate ingredientele. Rută publică.
+         */
+        get: operations["IngredientController_findAll"];
+        put?: never;
+        /**
+         * Creare ingredient
+         * @description Creează un ingredient nou. Slug unic.
+         */
+        post: operations["IngredientController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ingredients/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalii ingredient */
+        get: operations["IngredientController_findOne"];
+        put?: never;
+        post?: never;
+        /** Ștergere ingredient */
+        delete: operations["IngredientController_remove"];
+        options?: never;
+        head?: never;
+        /** Actualizare ingredient */
+        patch: operations["IngredientController_update"];
+        trace?: never;
+    };
     "/products": {
         parameters: {
             query?: never;
@@ -426,6 +469,74 @@ export interface components {
              */
             status?: "ACTIVE" | "INACTIVE";
         };
+        IngredientResponseDto: {
+            /**
+             * @description ID-ul unic al ingredientului
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Slug-ul unic (URL-friendly)
+             * @example rosii
+             */
+            slug: string;
+            /**
+             * @description Numele afișat al ingredientului
+             * @example Roșii
+             */
+            name: string;
+            /**
+             * @description URL-ul imaginii ingredientului
+             * @example https://example.com/images/rosii.jpg
+             */
+            imageUrl: string | null;
+        };
+        CreateIngredientDto: {
+            /**
+             * @description Identificator unic URL-friendly (kebab-case)
+             * @example rosii
+             */
+            slug: string;
+            /**
+             * @description Numele afișat al ingredientului
+             * @example Roșii
+             */
+            name: string;
+            /**
+             * @description URL-ul imaginii ingredientului
+             * @example https://example.com/images/rosii.jpg
+             */
+            imageUrl?: string;
+        };
+        UpdateIngredientDto: {
+            /**
+             * @description Identificator unic URL-friendly (kebab-case)
+             * @example rosii
+             */
+            slug?: string;
+            /**
+             * @description Numele afișat al ingredientului
+             * @example Roșii
+             */
+            name?: string;
+            /**
+             * @description URL-ul imaginii ingredientului
+             * @example https://example.com/images/rosii.jpg
+             */
+            imageUrl?: string;
+        };
+        FilterOptionDto: {
+            /**
+             * @description Valoarea tehnică a filtrului (trimisă la server)
+             * @example CONFIGURABLE
+             */
+            id: string;
+            /**
+             * @description Eticheta formatată pentru afișare în UI
+             * @example Personalizabil
+             */
+            name: string;
+        };
         ProductResponseDto: {
             /**
              * @description ID-ul unic al produsului
@@ -477,23 +588,41 @@ export interface components {
             /** @description Categoria produsului */
             category: components["schemas"]["CategoryResponseDto"] | null;
             /**
-             * @description Lista de ingrediente
+             * @description Lista de ingrediente (entități cu id, slug, name, imageUrl)
              * @example [
-             *       "roșii",
-             *       "mozzarella",
-             *       "busuioc"
+             *       {
+             *         "id": 1,
+             *         "slug": "rosii",
+             *         "name": "Roșii",
+             *         "imageUrl": "https://example.com/images/rosii.jpg"
+             *       },
+             *       {
+             *         "id": 2,
+             *         "slug": "mozzarella",
+             *         "name": "Mozzarella",
+             *         "imageUrl": null
+             *       }
              *     ]
              */
-            ingredients: string[];
+            ingredients: components["schemas"]["IngredientResponseDto"][];
             /**
-             * @description Lista de mărimi disponibile
+             * @description Lista de mărimi disponibile (id = valoare tehnică, name = etichetă afișare)
              * @example [
-             *       "mică",
-             *       "medie",
-             *       "mare"
+             *       {
+             *         "id": "mică",
+             *         "name": "Mică"
+             *       },
+             *       {
+             *         "id": "medie",
+             *         "name": "Medie"
+             *       },
+             *       {
+             *         "id": "mare",
+             *         "name": "Mare"
+             *       }
              *     ]
              */
-            sizes: string[];
+            sizes: components["schemas"]["FilterOptionDto"][];
             /**
              * @description Data și ora creării (format ISO 8601)
              * @example 2024-01-15T10:30:00.000Z
@@ -533,18 +662,6 @@ export interface components {
             /** @description Meta-informații pentru paginare */
             meta: components["schemas"]["PaginatedMetaDto"];
         };
-        FilterOptionDto: {
-            /**
-             * @description Valoarea tehnică a filtrului (trimisă la server)
-             * @example CONFIGURABLE
-             */
-            id: string;
-            /**
-             * @description Eticheta formatată pentru afișare în UI
-             * @example Personalizabil
-             */
-            name: string;
-        };
         ProductFiltersResponseDto: {
             /**
              * @description Tipuri de produse disponibile (SIMPLE/CONFIGURABLE)
@@ -560,26 +677,10 @@ export interface components {
              *     ]
              */
             types: components["schemas"]["FilterOptionDto"][];
+            /** @description Ingrediente disponibile în produsele filtrate (cu id, slug, name, imageUrl) */
+            ingredients: components["schemas"]["IngredientResponseDto"][];
             /**
-             * @description Ingrediente disponibile în produsele filtrate
-             * @example [
-             *       {
-             *         "id": "roșii",
-             *         "name": "Roșii"
-             *       },
-             *       {
-             *         "id": "mozzarella",
-             *         "name": "Mozzarella"
-             *       },
-             *       {
-             *         "id": "busuioc",
-             *         "name": "Busuioc"
-             *       }
-             *     ]
-             */
-            ingredients: components["schemas"]["FilterOptionDto"][];
-            /**
-             * @description Mărimi disponibile în produsele filtrate
+             * @description Mărimi disponibile în produsele filtrate (id, name)
              * @example [
              *       {
              *         "id": "mică",
@@ -641,14 +742,14 @@ export interface components {
              */
             categoryId: number;
             /**
-             * @description Lista de ingrediente
+             * @description ID-urile ingredientelor atașate produsului (trebuie să existe în baza de date)
              * @example [
-             *       "roșii",
-             *       "mozzarella",
-             *       "busuioc"
+             *       1,
+             *       2,
+             *       3
              *     ]
              */
-            ingredients?: string[];
+            ingredientIds?: number[];
             /**
              * @description Lista de mărimi disponibile
              * @example [
@@ -703,14 +804,14 @@ export interface components {
              */
             categoryId?: number;
             /**
-             * @description Lista de ingrediente
+             * @description ID-urile ingredientelor atașate produsului (trebuie să existe în baza de date)
              * @example [
-             *       "roșii",
-             *       "mozzarella",
-             *       "busuioc"
+             *       1,
+             *       2,
+             *       3
              *     ]
              */
-            ingredients?: string[];
+            ingredientIds?: number[];
             /**
              * @description Lista de mărimi disponibile
              * @example [
@@ -1550,6 +1651,207 @@ export interface operations {
             };
         };
     };
+    IngredientController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lista de ingrediente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["IngredientResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    IngredientController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateIngredientDto"];
+            };
+        };
+        responses: {
+            /** @description Ingredientul a fost creat */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["IngredientResponseDto"];
+                    };
+                };
+            };
+            /** @description Validare eșuată */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Neautorizat */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Doar administratorii */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Slug existent */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    IngredientController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ingredient găsit */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["IngredientResponseDto"];
+                    };
+                };
+            };
+            /** @description Ingredient negăsit */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    IngredientController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ingredient șters */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Doar administratorii */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Ingredient negăsit */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    IngredientController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateIngredientDto"];
+            };
+        };
+        responses: {
+            /** @description Ingredient actualizat */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["IngredientResponseDto"];
+                    };
+                };
+            };
+            /** @description Doar administratorii */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Ingredient negăsit */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     ProductController_findAll: {
         parameters: {
             query?: {
@@ -1559,7 +1861,7 @@ export interface operations {
                 page?: number;
                 /** @description Opțional. Array de mărimi pentru filtrare. Exemplu: ?sizes=mică&sizes=medie */
                 sizes?: unknown[];
-                /** @description Opțional. Array de ingrediente pentru filtrare. Exemplu: ?ingredients=roșii&ingredients=mozzarella */
+                /** @description Opțional. Array de ID-uri de ingrediente pentru filtrare. Exemplu: ?ingredients=1&ingredients=2 */
                 ingredients?: unknown[];
                 /** @description Opțional. Array de tipuri de produse pentru filtrare. Valori posibile: SIMPLE, CONFIGURABLE. Exemplu: ?types=SIMPLE&types=CONFIGURABLE */
                 types?: unknown[];

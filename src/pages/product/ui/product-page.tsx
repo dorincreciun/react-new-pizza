@@ -2,11 +2,14 @@ import { useParams } from "react-router"
 
 import { useProduct } from "@entities/product"
 
-import { Button, Container } from "@shared/ui"
+import { Button, Container, SegmentedControl } from "@shared/ui"
+import "swiper/css"
 
+import { IngredientSelect } from "./ingredient-select"
 import { ProductDescription } from "./product-description"
 import { ProductImage } from "./product-image"
 import { ProductTitle } from "./product-title"
+
 
 const ProductSkeleton = () => {
     return (
@@ -52,7 +55,9 @@ export const ProductPage = () => {
 
     if (!data) return <ProductEmpty />
 
-    const { imageUrl, name, description, price } = data
+    const { imageUrl, name, description, price, sizes, ingredients } = data
+
+    console.dir(data)
 
     return (
         <Container className="py-10">
@@ -76,8 +81,10 @@ export const ProductPage = () => {
 
                             {/* Options: Size/Dough/Extras */}
                             <section className="flex flex-col gap-4">
-                                {/* Aici vor veni selectoarele tale de dimensiune */}
-                                <div className="h-px bg-gray-100" /> {/* Divider subtil */}
+                                {sizes && (
+                                    <SegmentedControl className="max-w-105" options={sizes} />
+                                )}
+                                {ingredients.length > 0 && <IngredientSelect ingredients={ingredients} />}
                             </section>
                         </div>
 

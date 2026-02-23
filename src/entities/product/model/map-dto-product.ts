@@ -11,5 +11,7 @@ export const mapDtoProduct = (dto: ApiSchema<"ProductResponseDto">): ProductEnti
         price: dto.price,
         imageUrl: dto.imageUrl,
         type: dto.type,
+        sizes: dto.sizes,
+        ingredients: dto.ingredients
     }
 }

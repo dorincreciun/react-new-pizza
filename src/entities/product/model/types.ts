@@ -1,6 +1,7 @@
 import type { ApiSchema } from "@shared/types"
 
 export type FilterOption = ApiSchema<'FilterOptionDto'>
+export type IngredientType = ApiSchema<'IngredientResponseDto'>
 
 export interface ProductEntity {
     /**
@@ -39,6 +40,42 @@ export interface ProductEntity {
      * @enum {string}
      */
     type: "SIMPLE" | "CONFIGURABLE"
+    /**
+     * @description Lista de ingrediente (id = valoare tehnică, name = etichetă afișare)
+     * @example [
+     *       {
+     *         "id": "roșii",
+     *         "name": "Roșii"
+     *       },
+     *       {
+     *         "id": "mozzarella",
+     *         "name": "Mozzarella"
+     *       },
+     *       {
+     *         "id": "busuioc",
+     *         "name": "Busuioc"
+     *       }
+     *     ]
+     */
+    ingredients: IngredientType[]
+    /**
+     * @description Lista de mărimi disponibile (id = valoare tehnică, name = etichetă afișare)
+     * @example [
+     *       {
+     *         "id": "mică",
+     *         "name": "Mică"
+     *       },
+     *       {
+     *         "id": "medie",
+     *         "name": "Medie"
+     *       },
+     *       {
+     *         "id": "mare",
+     *         "name": "Mare"
+     *       }
+     *     ]
+     */
+    sizes: FilterOption[]
 }
 
 export interface ProductFilterOption {

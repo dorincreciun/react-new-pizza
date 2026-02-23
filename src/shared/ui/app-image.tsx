@@ -9,7 +9,7 @@ interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> {
 
 export const Image = ({
     src,
-    fallback = "/img/no-preview.png",
+    fallback = "/img/no-preview.jpg",
     alt = "image",
     loading = "lazy",
     className,
