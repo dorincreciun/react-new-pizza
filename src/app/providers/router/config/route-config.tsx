@@ -1,4 +1,5 @@
 import { HomePage } from "@pages/home"
+import { ProductPage } from "@pages/product"
 import { ProfilePage } from "@pages/profile"
 
 import { RoutePath } from "@shared/const/route-keys"
@@ -16,4 +17,9 @@ export const ROUTE_CONFIG: AppRouteProps[] = [
         element: <ProfilePage />,
         authOnly: true,
     },
+    {
+        path: RoutePath.products,
+        element: <ProductPage />,
+        authOnly: false,
+    }
 ]

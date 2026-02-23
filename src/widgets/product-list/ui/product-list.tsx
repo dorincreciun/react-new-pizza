@@ -38,6 +38,7 @@ export const ProductList = () => {
                 {products.map((product) => (
                     <ProductCard
                         key={product.id}
+                        id={product.id}
                         imageUrl={product.imageUrl || "/img/no-preview.png"}
                         name={product.name}
                         description={product.description || ""}

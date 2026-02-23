@@ -1,7 +1,10 @@
+import { Link } from "react-router"
+
 import { LogoutButton } from "@features/auth/logout"
 
 import { UserAvatar } from "@entities/user"
 
+import { AppRoutes } from "@shared/const"
 import { Dropdown } from "@shared/ui"
 
 export const UserProfileMenu = () => {
@@ -23,8 +26,8 @@ export const UserProfileMenu = () => {
 
                 {/* Opțiuni Meniu */}
                 <div className="space-y-1">
-                    <Dropdown.Item className="flex cursor-pointer items-center justify-between rounded-xl px-4 py-3">
-                        Setări profil
+                    <Dropdown.Item className="flex cursor-pointer items-center justify-between rounded-xl px-4 py-3" asChild>
+                        <Link to={AppRoutes.PROFILE}>Setări profil</Link>
                     </Dropdown.Item>
                     <Dropdown.Item className="flex cursor-pointer items-center justify-between rounded-xl px-4 py-3">
                         Comenzile mele

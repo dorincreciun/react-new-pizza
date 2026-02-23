@@ -1,8 +1,14 @@
+import { Link } from "react-router"
+
 import type { ProductEntity } from "@entities/product/model/types"
+
+import { getRouteProductDetails } from "@shared/const"
+import { Image } from "@shared/ui"
 
 type ProductCardActionType = ProductEntity["type"]
 
 interface Props {
+    id: number
     imageUrl: string
     name: string
     description: string
@@ -10,18 +16,17 @@ interface Props {
     action: ProductCardActionType
 }
 
-export const ProductCard = ({ imageUrl, name, description, price }: Props) => {
+export const ProductCard = ({ imageUrl, name, description, price, id }: Props) => {
     return (
         <div className="relative flex w-full flex-col">
             {/* Product image */}
-            <div className="flex items-center justify-center overflow-hidden rounded-2xl bg-[#FE5F00]/5 p-5">
-                <img
-                    src={imageUrl}
-                    alt={`${name} | ${description}`}
-                    width={220}
-                    height={220}
-                    loading="lazy"
+            <div className="relative flex items-center justify-center overflow-hidden rounded-2xl bg-[#FE5F00]/5 p-5">
+                <Link
+                    to={getRouteProductDetails(id)}
+                    className="absolute inset-0 z-10"
+                    aria-label={`View details for ${name}`}
                 />
+                <Image src={imageUrl} alt={`${name} | ${description}`} width={220} height={220} />
             </div>
             <div className="flex flex-1 flex-col">
                 <div className="flex-1 py-3.5">
