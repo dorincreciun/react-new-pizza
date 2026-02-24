@@ -43,7 +43,6 @@ export const ProductPage = () => {
 
     const { data, isLoading, isError } = useProduct(productId)
 
-    // 1. Handling de eroare mai prietenos
     if (isError) {
         return <ProductError />
     }

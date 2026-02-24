@@ -17,7 +17,7 @@ export const ProfilePage = () => {
                     <Title as="h1" size="xl" className="mb-6 lg:mb-6">
                         Profilul meu
                     </Title>
-                    <div className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-sm">
+                    <div className="rounded-2xl border border-black/6 bg-white p-6 shadow-sm">
                         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:text-left lg:flex-col lg:text-center">
                             <UpdateAvatar />
                             <UserInfoProfile />
