@@ -117,7 +117,9 @@ const DropdownItem = ({ onClick, className, asChild, ...rest }: DropdownItemProp
         <Component
             role="menuitem"
             className={cn(
-                "flex w-full cursor-pointer items-center rounded-xl px-3 py-2 text-sm font-medium text-gray-700 outline-hidden transition-colors hover:bg-orange-50 hover:text-[#FE5F00]",
+                "text-sm font-semibold text-black",
+                "hover:text-[#FE5F1E] hover:bg-[#FE5F1E]/5",
+                "transition-colors",
                 className,
             )}
             onClick={handleClick}

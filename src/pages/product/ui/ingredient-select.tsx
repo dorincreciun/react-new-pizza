@@ -20,7 +20,7 @@ export const IngredientSelect = ({ingredients, onChange}: Props) => {
         onChange?.(ingredient)
     }
     return (
-        <div className="">
+        <div>
             <div className="pb-4 text-base font-semibold">Ингредиенты</div>
             <div>
                 <Swiper modules={[Virtual]} spaceBetween={14} slidesPerView={3.5} virtual>
