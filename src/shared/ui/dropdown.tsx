@@ -13,7 +13,7 @@ import { Slot } from "@radix-ui/react-slot"
 
 import { cn } from "@shared/utils"
 
-// --- TYPES & CONTEXT ---
+// --- CONTEXT ---
 
 interface DropdownContextProps {
     isOpen: boolean
@@ -23,6 +23,10 @@ interface DropdownContextProps {
 
 const DropdownContext = createContext<DropdownContextProps | null>(null)
 
+/**
+ * Hook intern pentru accesarea stării Dropdown-ului.
+ * @throws {Error} Dacă este utilizat în afara componentei Dropdown.
+ */
 const useDropdownContext = () => {
     const ctx = useContext(DropdownContext)
     if (!ctx) {
@@ -33,16 +37,18 @@ const useDropdownContext = () => {
 
 // --- COMPONENTS ---
 
-/**
- * TRIGGER: Activează/Dezactivează meniul.
- * Folosește Slot pentru a fuziona cu elementul copil (ex: UserAvatar).
- */
 interface DropdownTriggerProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
+    /** Stiluri CSS sau funcție care returnează clase în funcție de starea meniului. */
     className?: ((state: { isOpen: boolean }) => string | undefined) | string
+    /** Referință către elementul buton. */
     ref?: Ref<HTMLButtonElement>
+    /** Dacă este `true`, fuzionează stilurile și comportamentul cu primul copil. */
     asChild?: boolean
 }
 
+/**
+ * Elementul declanșator pentru meniu. Gestionează accesibilitatea și starea de deschidere.
+ */
 const DropdownTrigger = ({ onClick, className, asChild, ref, ...rest }: DropdownTriggerProps) => {
     const { toggle, isOpen } = useDropdownContext()
 
@@ -70,14 +76,14 @@ const DropdownTrigger = ({ onClick, className, asChild, ref, ...rest }: Dropdown
     )
 }
 
-/**
- * CONTENT: Containerul pentru elementele meniului.
- * Include animația de zoom-in la montare.
- */
 interface DropdownContentProps extends Omit<HTMLAttributes<HTMLDivElement>, "className"> {
+    /** Stiluri CSS sau funcție care returnează clase în funcție de starea meniului. */
     className?: ((state: { isOpen: boolean }) => string | undefined) | string
 }
 
+/**
+ * Containerul plutitor care randează elementele meniului atunci când acesta este deschis.
+ */
 const DropdownContent = ({ className, ...rest }: DropdownContentProps) => {
     const { isOpen } = useDropdownContext()
 
@@ -85,7 +91,7 @@ const DropdownContent = ({ className, ...rest }: DropdownContentProps) => {
 
     const baseStyles = cn(
         "absolute right-0 z-50 mt-3 w-64 origin-top-right overflow-hidden rounded-2xl bg-white p-1.5 shadow-2xl ring-1 ring-black/5",
-        "animate-zoom-in", // Asigură-te că ai definit-o în CSS sau config
+        "animate-zoom-in",
     )
 
     const resolvedClassName = typeof className === "function" ? className({ isOpen }) : className
@@ -93,13 +99,14 @@ const DropdownContent = ({ className, ...rest }: DropdownContentProps) => {
     return <div className={cn(baseStyles, resolvedClassName)} {...rest} />
 }
 
-/**
- * ITEM: Element individual din meniu.
- */
 interface DropdownItemProps extends HTMLAttributes<HTMLDivElement> {
+    /** Dacă este `true`, elementul devine componenta copil (ex: un Link). */
     asChild?: boolean
 }
 
+/**
+ * Element individual de meniu. Închide automat meniul la click dacă `closeOnSelect` este activat.
+ */
 const DropdownItem = ({ onClick, className, asChild, ...rest }: DropdownItemProps) => {
     const { closeOnSelect, toggle } = useDropdownContext()
 
@@ -118,7 +125,7 @@ const DropdownItem = ({ onClick, className, asChild, ...rest }: DropdownItemProp
             role="menuitem"
             className={cn(
                 "text-sm font-semibold text-black",
-                "hover:text-[#FE5F1E] hover:bg-[#FE5F1E]/5",
+                "hover:bg-[#FE5F1E]/5 hover:text-[#FE5F1E]",
                 "transition-colors",
                 className,
             )}
@@ -128,15 +135,18 @@ const DropdownItem = ({ onClick, className, asChild, ...rest }: DropdownItemProp
     )
 }
 
-/**
- * ROOT: Componenta părinte care gestionează starea.
- */
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
+    /** Starea inițială a meniului. Implicit: `false`. */
     defaultOpen?: boolean
+    /** Închide meniul automat când un item este selectat. Implicit: `true`. */
     closeOnSelect?: boolean
+    /** Elementele componentei (Trigger, Content, Items). */
     children: ReactNode
 }
 
+/**
+ * Componenta rădăcină a Dropdown-ului. Gestionează starea internă și contextul.
+ */
 const DropdownRoot = ({
     defaultOpen = false,
     closeOnSelect = true,
@@ -156,8 +166,20 @@ const DropdownRoot = ({
     )
 }
 
-// --- EXPORT API ---
-
+/**
+ * Sistem de meniu Dropdown compozit.
+ * @example
+ * ```tsx
+ * <Dropdown closeOnSelect>
+ *      <Dropdown.Trigger asChild>
+ *          <button>Contul meu</button>
+ *      </Dropdown.Trigger>
+ *      <Dropdown.Content>
+ *          <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+ *      </Dropdown.Content>
+ * </Dropdown>
+ * ```
+ */
 export const Dropdown = Object.assign(DropdownRoot, {
     Trigger: DropdownTrigger,
     Content: DropdownContent,

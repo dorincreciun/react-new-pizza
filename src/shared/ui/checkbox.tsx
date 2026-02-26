@@ -4,28 +4,50 @@ import { Check } from "lucide-react"
 
 import { cn } from "../utils"
 
-// --- TYPES ---
-
-type NativeInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "id">
-
-interface CheckboxProps extends NativeInputProps {
+/**
+ * Proprietățile pentru componenta individuală Checkbox.
+ */
+interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "id"> {
+    /** Eticheta afișată lângă elementul de bifare. */
     label: ReactNode
+    /** Clase CSS adiționale pentru personalizarea stilului containerului. */
+    className?: string
 }
 
+/**
+ * Proprietățile pentru grupul de checkbox-uri.
+ */
 interface CheckboxGroupProps<T extends string> {
+    /** Valorile selectate implicit la montarea componentei. */
     defaultValue?: T[]
+    /** Funcție de callback apelată la schimbarea selecției, returnând noul set de valori. */
     onChange?: (values: T[]) => void
+    /** Lista de opțiuni ce vor fi randate în grup. */
     options: Array<CheckboxProps & { value: T }>
+    /** Clase CSS pentru containerul grupului. */
     className?: string
 }
 
+/**
+ * Proprietățile pentru starea de încărcare (Skeleton) a grupului.
+ */
 interface CheckboxGroupSkeletonProps {
+    /** Numărul de elemente de tip skeleton ce vor fi afișate. */
     count?: number
+    /** Clase CSS pentru containerul skeleton-ului. */
     className?: string
 }
 
-// --- COMPONENTS: CHECKBOX ---
-
+/**
+ * Componentă Checkbox personalizată cu feedback vizual și suport pentru accesibilitate.
+ * @param label - Eticheta descriptivă a input-ului.
+ * @param className - Clase Tailwind pentru container.
+ * @param rest - Atribute native de input (checked, disabled, onChange etc.).
+ * @example
+ * ```tsx
+ * <Checkbox label="Accept termeni și condiții" onChange={(e) => console.log(e.target.checked)} />
+ * ```
+ */
 export const Checkbox = ({ label, className, ...rest }: CheckboxProps) => {
     const id = useId()
 
@@ -64,19 +86,21 @@ export const Checkbox = ({ label, className, ...rest }: CheckboxProps) => {
     )
 }
 
-// --- COMPONENTS: CHECKBOX GROUP ---
-
+/**
+ * Container pentru gestionarea unei liste de opțiuni multiple (Checkbox-uri).
+ * Gestionează intern starea selecției și oferă sincronizare prin callback-ul onChange.
+ * @param defaultValue - Array cu valorile selectate inițial.
+ * @param onChange - Callback declanșat la fiecare modificare a listei de selecție.
+ * @param options - Configurația fiecărui element din listă (label, value, disabled).
+ * @param className - Clase pentru layout-ul containerului (implicit vertical flex).
+ */
 export const CheckboxGroup = <T extends string>({
     defaultValue = [],
     onChange,
     options,
     className,
 }: CheckboxGroupProps<T>) => {
-    // --- HOOKS: STATE ---
-
     const [selectedValues, setSelectedValues] = useState<T[]>(defaultValue)
-
-    // --- HANDLERS ---
 
     const toggle = (value: T) => {
         const nextValues = selectedValues.includes(value)
@@ -105,8 +129,11 @@ export const CheckboxGroup = <T extends string>({
     )
 }
 
-// --- COMPONENTS: SKELETON ---
-
+/**
+ * Componentă de tip placeholder (Skeleton) utilizată în timpul încărcării datelor pentru un grup de checkbox-uri.
+ * @param count - Numărul de linii de skeleton randate.
+ * @param className - Clase adiționale pentru containerul skeleton-ului.
+ */
 export const CheckboxGroupSkeleton = ({ count = 3, className }: CheckboxGroupSkeletonProps) => {
     return (
         <div className={cn("flex w-full flex-col gap-2", className)}>

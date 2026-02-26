@@ -7,6 +7,14 @@ import { useFormStatus } from "react-dom"
 
 import { cn } from "@shared/utils"
 
+// --- TYPES ---
+
+type NativeButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color">
+
+interface ButtonProps extends NativeButtonProps, VariantProps<typeof buttonCva> {
+    isLoading?: boolean
+    asChild?: boolean
+}
 
 // --- STYLES (CVA) ---
 
@@ -178,17 +186,32 @@ const buttonCva = cva(
     },
 )
 
-// --- TYPES ---
-
-type NativeButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color">
-
-interface ButtonProps extends NativeButtonProps, VariantProps<typeof buttonCva> {
-    isLoading?: boolean
-    asChild?: boolean
-}
-
 // --- COMPONENT ---
 
+/**
+ * Componentă fundamentală de tip Buton, polimorfică și configurabilă prin variante.
+ * Suportă stări de încărcare automate (via `react-dom` Form Status) și animații de tip "shimmer".
+ * @param className - Clase CSS adiționale (Tailwind) pentru personalizare.
+ * @param isLoading - Forțează afișarea stării de încărcare (spinner) și dezactivează interacțiunea.
+ * @param disabled - Dezactivează butonul și previne interacțiunile utilizatorului.
+ * @param size - Dimensiunea butonului. Opțiuni: `sm`, `md`, `lg`. Implicit: `md`.
+ * @param color - Tema de culoare. Opțiuni: `primary`, `secondary`, `tertiary`. Implicit: `primary`.
+ * @param kind - Stilul vizual al butonului. Opțiuni: `solid`, `outline`, `ghost`, `soft`. Implicit: `solid`.
+ * @param children - Conținutul afișat în interiorul butonului.
+ * @param onlyIcon - Dacă este `true`, aplică un raport de aspect pătrat, optimizat pentru iconițe.
+ * @param asChild - Dacă este `true`, butonul va randa copilul său (folosind Radix Slot), păstrând stilurile.
+ * @param rest - Restul atributelor native de buton HTML (ex: `onClick`, `type`, `form`).
+ * @remarks
+ * **Caracteristici speciale:**
+ * 1. **Form Integration**: Utilizează `useFormStatus` pentru a afișa automat starea de loading în formulare.
+ * 2. **Polimorfism**: Prin `asChild`, poate deveni un link (`<a>`) sau alt element, păstrând design-ul.
+ * @example
+ * ```tsx
+ * <Button color="primary" kind="solid" onClick={() => console.log('click')}>
+ *      Cumpără acum
+ * </Button>
+ * ```
+ */
 export const Button = ({
     className,
     isLoading,

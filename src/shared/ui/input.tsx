@@ -1,17 +1,16 @@
 import {
     createContext,
-    useContext,
-    useId,
-    type ReactNode,
     type InputHTMLAttributes,
     type LabelHTMLAttributes,
+    type ReactNode,
+    useContext,
+    useId,
 } from "react"
 
 import { cva, type VariantProps } from "class-variance-authority"
-import { useFormContext, type RegisterOptions } from "react-hook-form"
+import { type RegisterOptions, useFormContext } from "react-hook-form"
 
 import { cn } from "@shared/utils"
-
 
 const inputVariants = cva(
     [
@@ -66,44 +65,38 @@ const inputVariants = cva(
     },
 )
 
-// ==========================================
-// 🔵 TIPURI & CONTEXT
-// ==========================================
-
-/** Statusul vizual al componentei */
 export type InputStatus = "default" | "error" | "success" | "warning" | "loading" | "disabled"
 
-/** Props pentru contextul intern al grupului Input */
 interface ContextProps {
     id: string
     status: InputStatus
     name?: string
 }
 
-/** Props pentru componenta Root */
 interface RootProps {
-    /** ID unic manual. Dacă lipsește, se generează unul automat via useId */
+    /** ID unic manual. Dacă lipsește, se generează unul automat. */
     id?: string
-    /** Status manual. Dacă este folosit cu React Hook Form, statusul este calculat automat (error/loading) */
+    /** Status vizual manual. Suprascrie starea derivată din React Hook Form. */
     status?: InputStatus
-    /** Numele câmpului pentru înregistrarea în React Hook Form */
+    /** Numele câmpului pentru înregistrarea în React Hook Form. */
     name?: string
+    /** Sub-componentele Input (Label, Control, Helper etc.). */
     children: ReactNode
+    /** Clase CSS adiționale pentru containerul Root. */
     className?: string
 }
 
 const InputContext = createContext<ContextProps | null>(null)
 
-/** Hook intern pentru accesarea stării comune a input-ului */
 const useInputContext = () => {
     const ctx = useContext(InputContext)
-    if (!ctx) throw new Error("Sub-componentele Input.* trebuie folosite în <Input /> (Root)")
+    if (!ctx) throw new Error("Sub-componentele Input.* trebuie folosite în <Input />")
     return ctx
 }
 
 /**
- * @component Root
- * Componenta părinte care gestionează contextul și sincronizarea cu React Hook Form.
+ * Componentă container pentru câmpuri de input.
+ * Gestionează contextul de stare și sincronizarea automată cu React Hook Form.
  */
 const Root = ({ id: externalId, status: manualStatus, name, children, className }: RootProps) => {
     const generatedId = useId()
@@ -115,7 +108,6 @@ const Root = ({ id: externalId, status: manualStatus, name, children, className 
 
     let computedStatus: InputStatus = manualStatus || "default"
 
-    // Sincronizare automată cu starea formularului
     if (isSubmitting) computedStatus = "loading"
     else if (rhfError) computedStatus = "error"
 
@@ -127,8 +119,7 @@ const Root = ({ id: externalId, status: manualStatus, name, children, className 
 }
 
 /**
- * @component Label
- * Eticheta input-ului, legată automat prin `htmlFor` de câmpul de editare.
+ * Eticheta câmpului de input. Se leagă automat de Field prin ID.
  */
 const Label = ({ className, ...props }: LabelHTMLAttributes<HTMLLabelElement>) => {
     const { id, status } = useInputContext()
@@ -154,8 +145,7 @@ const Label = ({ className, ...props }: LabelHTMLAttributes<HTMLLabelElement>) =
 }
 
 /**
- * @component Control
- * Containerul vizual care aplică stilurile de bordură, shadow și focus.
+ * Containerul vizual al input-ului. Aplică stilurile de bordură, focus și variantele CVA.
  */
 const Control = ({
     children,
@@ -175,8 +165,7 @@ const Control = ({
 }
 
 /**
- * @component Slot
- * Element decorativ (iconiță) plasat în interiorul Control-ului.
+ * Element decorativ poziționat în interiorul Control-ului (ex: iconițe).
  */
 const Slot = ({ children, className }: { children: ReactNode; className?: string }) => (
     <div
@@ -189,25 +178,22 @@ const Slot = ({ children, className }: { children: ReactNode; className?: string
     </div>
 )
 
-/** Props pentru componenta Field (Input nativ) */
 interface FieldProps extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
     "name" | "id" | "disabled"
 > {
-    /** Reguli de validare React Hook Form (required, pattern, validate, etc.) */
+    /** Reguli de validare pentru React Hook Form. */
     rules?: RegisterOptions
 }
 
 /**
- * @component Field
- * Câmpul de input nativ. Gestionează automat register-ul RHF și starea de disabled.
+ * Câmpul de editare nativ. Implementează înregistrarea automată în React Hook Form.
  */
 const Field = ({ className, rules, ...props }: FieldProps) => {
     const { id, status, name } = useInputContext()
     const ctx = useFormContext()
     const isDisabled = status === "disabled" || status === "loading"
 
-    // Înregistrare automată în RHF dacă name și contextul există
     const registration = ctx && name ? ctx.register(name, rules) : {}
 
     return (
@@ -227,8 +213,7 @@ const Field = ({ className, rules, ...props }: FieldProps) => {
 }
 
 /**
- * @component Helper
- * Text de suport sau eroare. Afișează automat mesajul din React Hook Form dacă există.
+ * Text de ajutor sau mesaj de eroare. Extrage automat eroarea din RHF dacă există.
  */
 const Helper = ({ children, className }: { children?: ReactNode; className?: string }) => {
     const { id, status, name } = useInputContext()
@@ -264,14 +249,17 @@ const Helper = ({ children, className }: { children?: ReactNode; className?: str
 }
 
 /**
+ * Sistem de Input compozit cu suport pentru React Hook Form.
  * @example
+ * ```tsx
  * <Input name="email">
- *     <Input.Label>Email</Input.Label>
- *     <Input.Control>
- *         <Input.Field placeholder="ion@yahoo.com" rules={{ required: "Email obligatoriu" }} />
+ *      <Input.Label>Email</Input.Label>
+ *      <Input.Control>
+ *          <Input.Field placeholder="exemplu@domeniu.com" rules={{ required: "Email-ul este obligatoriu" }} />
  *      </Input.Control>
  *      <Input.Helper />
  * </Input>
+ * ```
  */
 export const Input = Object.assign(Root, {
     Label,
