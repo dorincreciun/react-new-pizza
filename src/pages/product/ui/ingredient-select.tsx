@@ -15,6 +15,8 @@ interface Props {
 export const IngredientSelect = ({ingredients, onChange}: Props) => {
     const [activeAddon, setActiveAddon] = useState<number | null>(0)
 
+    console.dir(ingredients)
+
     const handleSelect = (ingredient: IngredientType) => {
         setActiveAddon(ingredient.id)
         onChange?.(ingredient)

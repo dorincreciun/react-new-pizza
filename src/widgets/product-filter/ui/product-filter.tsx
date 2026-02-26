@@ -26,7 +26,7 @@ export const ProductFilter = () => {
     const { types, sizes, ingredients } = data
 
     return (
-        <div className="flex w-56 flex-col self-stretch">
+        <div className="flex w-75 flex-col self-stretch">
             <Title as={"h2"} size={"sm"}>
                 Фильтрация
             </Title>

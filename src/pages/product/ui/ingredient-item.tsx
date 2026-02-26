@@ -25,7 +25,7 @@ export const IngredientItem = ({ name, image, price, isActive, onClick }: Props)
         >
             <div className="overflow-hidden rounded-xl">
                 <Image
-                    src={image}
+                    src={"http://localhost:3000/" + image}
                     alt={name}
                     width={110}
                     height={110}

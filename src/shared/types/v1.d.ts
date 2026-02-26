@@ -433,6 +433,28 @@ export interface components {
              */
             updatedAt: string;
         };
+        PaginatedMetaDto: {
+            /**
+             * @description Numărul total de înregistrări (itemuri) care corespund filtrelor
+             * @example 50
+             */
+            totalItems: number;
+            /**
+             * @description Numărul paginii curente (1-based)
+             * @example 1
+             */
+            currentPage: number;
+            /**
+             * @description Numărul de înregistrări (itemuri) per pagină
+             * @example 10
+             */
+            itemsPerPage: number;
+            /**
+             * @description Numărul total de pagini disponibile. 0 dacă nu există înregistrări.
+             * @example 5
+             */
+            totalPages: number;
+        };
         CreateCategoryDto: {
             /**
              * @description Identificator unic URL-friendly pentru categorie (kebab-case)
@@ -486,10 +508,15 @@ export interface components {
              */
             name: string;
             /**
-             * @description URL-ul imaginii ingredientului
-             * @example https://example.com/images/rosii.jpg
+             * @description URL-ul imaginii ingredientului. Null dacă nu există imagine.
+             * @example /ingredient-img/example.png
              */
             imageUrl: string | null;
+            /**
+             * @description Prețul suplimentar implicit la adăugarea ingredientului (lei). Null dacă nu se aplică.
+             * @example 2.5
+             */
+            defaultExtraPrice: number | null;
         };
         CreateIngredientDto: {
             /**
@@ -507,6 +534,11 @@ export interface components {
              * @example https://example.com/images/rosii.jpg
              */
             imageUrl?: string;
+            /**
+             * @description Prețul suplimentar implicit la adăugarea ingredientului (lei). Opțional.
+             * @example 2.5
+             */
+            defaultExtraPrice?: number;
         };
         UpdateIngredientDto: {
             /**
@@ -524,6 +556,11 @@ export interface components {
              * @example https://example.com/images/rosii.jpg
              */
             imageUrl?: string;
+            /**
+             * @description Prețul suplimentar implicit la adăugarea ingredientului (lei). Opțional.
+             * @example 2.5
+             */
+            defaultExtraPrice?: number;
         };
         FilterOptionDto: {
             /**
@@ -588,19 +625,21 @@ export interface components {
             /** @description Categoria produsului */
             category: components["schemas"]["CategoryResponseDto"] | null;
             /**
-             * @description Lista de ingrediente (entități cu id, slug, name, imageUrl)
+             * @description Lista de ingrediente (id, slug, name, imageUrl, defaultExtraPrice)
              * @example [
              *       {
              *         "id": 1,
              *         "slug": "rosii",
              *         "name": "Roșii",
-             *         "imageUrl": "https://example.com/images/rosii.jpg"
+             *         "imageUrl": "https://example.com/images/rosii.jpg",
+             *         "defaultExtraPrice": 1.5
              *       },
              *       {
              *         "id": 2,
              *         "slug": "mozzarella",
              *         "name": "Mozzarella",
-             *         "imageUrl": null
+             *         "imageUrl": null,
+             *         "defaultExtraPrice": 2.5
              *       }
              *     ]
              */
@@ -633,28 +672,6 @@ export interface components {
              * @example 2024-01-15T10:30:00.000Z
              */
             updatedAt: string;
-        };
-        PaginatedMetaDto: {
-            /**
-             * @description Numărul total de înregistrări (itemuri) care corespund filtrelor
-             * @example 50
-             */
-            totalItems: number;
-            /**
-             * @description Numărul paginii curente (1-based)
-             * @example 1
-             */
-            currentPage: number;
-            /**
-             * @description Numărul de înregistrări (itemuri) per pagină
-             * @example 10
-             */
-            itemsPerPage: number;
-            /**
-             * @description Numărul total de pagini disponibile. 0 dacă nu există înregistrări.
-             * @example 5
-             */
-            totalPages: number;
         };
         ProductListResponseDto: {
             /** @description Lista de produse */
@@ -1231,7 +1248,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Lista de categorii */
+            /** @description Lista de categorii cu meta pentru paginare */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1239,6 +1256,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["CategoryResponseDto"][];
+                        meta: components["schemas"]["PaginatedMetaDto"];
                     };
                 };
             };
@@ -1660,7 +1678,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Lista de ingrediente */
+            /** @description Lista de ingrediente cu meta pentru paginare */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1668,6 +1686,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["IngredientResponseDto"][];
+                        meta: components["schemas"]["PaginatedMetaDto"];
                     };
                 };
             };
@@ -1697,39 +1716,95 @@ export interface operations {
                     };
                 };
             };
-            /** @description Validare eșuată */
+            /**
+             * @description Validare eșuată
+             * @example {
+             *       "statusCode": 400,
+             *       "message": "Slug-ul trebuie să fie în format kebab-case",
+             *       "error": "Bad Request"
+             *     }
+             */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": "Slug-ul trebuie să fie în format kebab-case",
+                     *       "error": "Bad Request"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Neautorizat */
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Doar administratorii */
+            /**
+             * @description Doar administratorii pot crea ingrediente
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Slug existent */
+            /**
+             * @description Slug existent
+             * @example {
+             *       "statusCode": 409,
+             *       "message": "Un ingredient cu slug-ul \"rosii\" există deja",
+             *       "error": "Conflict"
+             *     }
+             */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "Un ingredient cu slug-ul \"rosii\" există deja",
+                     *       "error": "Conflict"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
@@ -1746,7 +1821,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Ingredient găsit */
+            /** @description Ingredient găsit (imageUrl poate fi null) */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1757,12 +1832,26 @@ export interface operations {
                     };
                 };
             };
-            /** @description Ingredient negăsit */
+            /**
+             * @description Ingredient negăsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
@@ -1786,21 +1875,72 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Doar administratorii */
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot șterge ingrediente
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Ingredient negăsit */
+            /**
+             * @description Ingredient negăsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
@@ -1832,21 +1972,72 @@ export interface operations {
                     };
                 };
             };
-            /** @description Doar administratorii */
+            /**
+             * @description Neautorizat
+             * @example {
+             *       "statusCode": 401,
+             *       "message": "Token invalid sau expirat",
+             *       "error": "Unauthorized"
+             *     }
+             */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Token invalid sau expirat",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /**
+             * @description Doar administratorii pot actualiza ingrediente
+             * @example {
+             *       "statusCode": 403,
+             *       "message": "Doar administratorii pot efectua această acțiune",
+             *       "error": "Forbidden"
+             *     }
+             */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Doar administratorii pot efectua această acțiune",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Ingredient negăsit */
+            /**
+             * @description Ingredient negăsit
+             * @example {
+             *       "statusCode": 404,
+             *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+             *       "error": "Not Found"
+             *     }
+             */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Ingredientul cu ID-ul 999 nu a fost găsit",
+                     *       "error": "Not Found"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
@@ -1878,7 +2069,10 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ProductListResponseDto"];
+                    "application/json": {
+                        data: components["schemas"]["ProductResponseDto"][];
+                        meta: components["schemas"]["PaginatedMetaDto"];
+                    };
                 };
             };
             /**
