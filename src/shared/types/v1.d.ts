@@ -564,10 +564,10 @@ export interface components {
         };
         FilterOptionDto: {
             /**
-             * @description Valoarea tehnică a filtrului (trimisă la server)
-             * @example CONFIGURABLE
+             * @description Identificatorul numeric al opțiunii (trimis la server la filtrare)
+             * @example 2
              */
-            id: string;
+            id: number;
             /**
              * @description Eticheta formatată pentru afișare în UI
              * @example Personalizabil
@@ -645,18 +645,18 @@ export interface components {
              */
             ingredients: components["schemas"]["IngredientResponseDto"][];
             /**
-             * @description Lista de mărimi disponibile (id = valoare tehnică, name = etichetă afișare)
+             * @description Lista de mărimi disponibile (id numeric: 1=mică, 2=medie, 3=mare, 4=familie; name = etichetă afișare)
              * @example [
              *       {
-             *         "id": "mică",
+             *         "id": 1,
              *         "name": "Mică"
              *       },
              *       {
-             *         "id": "medie",
+             *         "id": 2,
              *         "name": "Medie"
              *       },
              *       {
-             *         "id": "mare",
+             *         "id": 3,
              *         "name": "Mare"
              *       }
              *     ]
@@ -679,41 +679,71 @@ export interface components {
             /** @description Meta-informații pentru paginare */
             meta: components["schemas"]["PaginatedMetaDto"];
         };
-        ProductFiltersResponseDto: {
+        FilterSectionDto: {
             /**
-             * @description Tipuri de produse disponibile (SIMPLE/CONFIGURABLE)
+             * @description Numele secțiunii de filtru (ex: Tipuri, Ingrediente, Mărimi)
+             * @example Tipuri
+             */
+            name: string;
+            /**
+             * @description Cheia pentru parametrul din URL (ex: GET /products?types=1&types=2, ?ingredients=1, ?sizes=1&sizes=2)
+             * @example types
+             */
+            url_key: string;
+            /**
+             * @description Opțiunile din secțiune. Pentru Tipuri și Mărimi: { id: number, name: string }. Pentru Ingrediente: { id, slug, name, imageUrl, defaultExtraPrice }.
              * @example [
              *       {
-             *         "id": "SIMPLE",
+             *         "id": 1,
              *         "name": "Simplu"
              *       },
              *       {
-             *         "id": "CONFIGURABLE",
+             *         "id": 2,
              *         "name": "Personalizabil"
              *       }
              *     ]
              */
-            types: components["schemas"]["FilterOptionDto"][];
-            /** @description Ingrediente disponibile în produsele filtrate (cu id, slug, name, imageUrl) */
-            ingredients: components["schemas"]["IngredientResponseDto"][];
+            options: components["schemas"]["FilterOptionDto"][];
+        };
+        ProductFiltersResponseDto: {
             /**
-             * @description Mărimi disponibile în produsele filtrate (id, name)
+             * @description Lista de secțiuni de filtre. Fiecare secțiune are name, url_key și options.
              * @example [
              *       {
-             *         "id": "mică",
-             *         "name": "Mică"
+             *         "name": "Tipuri",
+             *         "url_key": "types",
+             *         "options": [
+             *           {
+             *             "id": 1,
+             *             "name": "Simplu"
+             *           },
+             *           {
+             *             "id": 2,
+             *             "name": "Personalizabil"
+             *           }
+             *         ]
              *       },
              *       {
-             *         "id": "medie",
-             *         "name": "Medie"
-             *       },
-             *       {
-             *         "id": "mare",
-             *         "name": "Mare"
+             *         "name": "Mărimi",
+             *         "url_key": "sizes",
+             *         "options": [
+             *           {
+             *             "id": 1,
+             *             "name": "Mică"
+             *           },
+             *           {
+             *             "id": 2,
+             *             "name": "Medie"
+             *           },
+             *           {
+             *             "id": 3,
+             *             "name": "Mare"
+             *           }
+             *         ]
              *       }
              *     ]
              */
-            sizes: components["schemas"]["FilterOptionDto"][];
+            filters: components["schemas"]["FilterSectionDto"][];
         };
         CreateProductDto: {
             /**
@@ -2050,11 +2080,11 @@ export interface operations {
                 categoryId?: number;
                 /** @description Opțional. Numărul paginii (default: 1). Fiecare pagină are 10 produse. */
                 page?: number;
-                /** @description Opțional. Array de mărimi pentru filtrare. Exemplu: ?sizes=mică&sizes=medie */
+                /** @description Opțional. ID-uri numerice: 1=mică, 2=medie, 3=mare, 4=familie. Exemplu: ?sizes=1&sizes=2 */
                 sizes?: unknown[];
                 /** @description Opțional. Array de ID-uri de ingrediente pentru filtrare. Exemplu: ?ingredients=1&ingredients=2 */
                 ingredients?: unknown[];
-                /** @description Opțional. Array de tipuri de produse pentru filtrare. Valori posibile: SIMPLE, CONFIGURABLE. Exemplu: ?types=SIMPLE&types=CONFIGURABLE */
+                /** @description Opțional. ID-uri numerice: 1=SIMPLE, 2=CONFIGURABLE. Exemplu: ?types=1&types=2 */
                 types?: unknown[];
             };
             header?: never;

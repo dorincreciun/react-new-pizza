@@ -78,8 +78,4 @@ export interface ProductEntity {
     sizes: FilterOption[]
 }
 
-export interface ProductFilterOption {
-    types: FilterOption[]
-    ingredients: FilterOption[]
-    sizes: FilterOption[]
-}
+

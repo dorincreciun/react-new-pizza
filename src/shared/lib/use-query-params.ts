@@ -8,7 +8,9 @@ const parseValue = (value: string): string | number => {
     return !Number.isNaN(num) ? num : value
 }
 
-export const useQueryParams = <T extends Record<string, string | number>>(
+type QueryType = Record<string, string | number>
+
+export const useQueryParams = <T extends QueryType>(
     keysToExtract: (keyof T)[] = [],
 ): Partial<T> => {
     const [searchParams] = useSearchParams()
