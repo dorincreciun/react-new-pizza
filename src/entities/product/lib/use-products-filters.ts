@@ -7,10 +7,10 @@ import { getProductsFilters } from "../api/get-products-filters"
 import { mapDtoFilterOptions } from "../model/map-dto-filter-options"
 
 interface Props {
-    categoryId?: number
-    size?: string
-    ingredients?: string
-    types?: string
+    categoryId: number
+    size: string[]
+    ingredients: string[]
+    types: string[]
 }
 
 export const useProductsFilters = (params: Partial<Props>) => {

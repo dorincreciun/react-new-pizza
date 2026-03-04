@@ -9,9 +9,9 @@ interface ProductsListParams {
 
 interface ProductFiltersParams {
     categoryId?: number
-    size?: string
-    ingredients?: string
-    types?: string
+    size?: string | string[]
+    ingredients?: string | string[]
+    types?: string | string[]
 }
 
 export const QueryKeys = {

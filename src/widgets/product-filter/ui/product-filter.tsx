@@ -8,9 +8,9 @@ import { ProductFilterView } from "./product-filter-view"
 
 type ProductUrlParams = {
     categoryId: number
-    size: string
-    ingredients: string
-    types: string
+    size: string[]
+    ingredients: string[]
+    types: string[]
 }
 
 export const ProductFilter = () => {
