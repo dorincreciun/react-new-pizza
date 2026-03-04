@@ -6,18 +6,16 @@ import type { ApiSchema } from "@shared/types"
 import { getProductsFilters } from "../api/get-products-filters"
 import { mapDtoFilterOptions } from "../model/map-dto-filter-options"
 
-interface Props {
-    categoryId: number
-    size: string[]
-    ingredients: string[]
-    types: string[]
+type Props = {
+    categoryId?: number
+    size?: string | string[]
+    ingredients?: string | string[]
+    types?: string | string[]
 }
 
-export const useProductsFilters = (params: Partial<Props>) => {
-    const keys = QueryKeys.productFilters(params)
-
+export const useProductsFilters = (params: Props) => {
     return useQuery({
-        queryKey: keys,
+        queryKey: QueryKeys.productFilters(params),
         queryFn: (): Promise<ApiSchema<"ProductFiltersResponseDto">> =>
             getProductsFilters(params.categoryId),
         select: (data) => mapDtoFilterOptions(data),

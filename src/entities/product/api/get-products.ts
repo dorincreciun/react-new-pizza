@@ -1,12 +1,11 @@
 import { apiClient } from "@shared/lib"
 import type { ApiSchema } from "@shared/types"
 
-export const getProducts = async (
-    categoryId?: number,
-    page?: number,
+export const getProducts = async <T extends Record<string, string | string[] | number>>(
+    params: T,
 ): Promise<ApiSchema<"ProductListResponseDto">> => {
     const { data, error } = await apiClient.GET("/products", {
-        params: { query: { categoryId, page } },
+        params: { query: params },
     })
 
     const products = data?.data

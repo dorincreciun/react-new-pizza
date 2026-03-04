@@ -17,8 +17,8 @@ type ProductUrlParams = {
 }
 
 export const ProductList = () => {
-    const { categoryId, page } = useQueryParams<ProductUrlParams>(["page", "categoryId"])
-    const { data: response, isLoading, isError } = useProducts(categoryId, page)
+    const filters = useQueryParams<ProductUrlParams>()
+    const { data: response, isLoading, isError } = useProducts(filters)
 
     if (isError) return <ProductListError />
     if (isLoading || !response) return <ProductListSkeleton />

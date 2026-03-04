@@ -1,23 +1,9 @@
-interface ProductPageParams {
-    productId: number
-}
-
-interface ProductsListParams {
-    categoryId?: number
-    page?: number
-}
-
-interface ProductFiltersParams {
-    categoryId?: number
-    size?: string | string[]
-    ingredients?: string | string[]
-    types?: string | string[]
-}
+type BaseExtend = Record<string, string | string[] | number | undefined>
 
 export const QueryKeys = {
     authUser: ["authUser"] as const,
     categories: ["categories"] as const,
-    productPage: (params: ProductPageParams) => ["product", params] as const,
-    productsList: (params: ProductsListParams) => ["products", "list", params] as const,
-    productFilters: (params: ProductFiltersParams) => ["products", "filters", params] as const,
+    productPage: <T extends BaseExtend>(params: T) => ["product", params] as const,
+    productsList: <T extends BaseExtend>(params: T) => ["products", "list", params] as const,
+    productFilters: <T extends BaseExtend>(params: T) => ["products", "filters", params] as const,
 } as const

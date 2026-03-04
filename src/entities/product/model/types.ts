@@ -77,5 +77,3 @@ export interface ProductEntity {
      */
     sizes: FilterOption[]
 }
-
-

@@ -1,11 +1,11 @@
 import { apiClient } from "@shared/lib"
 import type { ApiSchema } from "@shared/types"
 
-export const getProduct = async (productId: number): Promise<ApiSchema<"ProductResponseDto">> => {
+export const getProduct = async (id: number): Promise<ApiSchema<"ProductResponseDto">> => {
     const { data, error } = await apiClient.GET("/products/{id}", {
         params: {
             path: {
-                id: productId,
+                id,
             },
         },
     })
