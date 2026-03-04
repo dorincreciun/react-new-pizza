@@ -76,4 +76,9 @@ export interface ProductEntity {
      *     ]
      */
     sizes: FilterOption[]
+    /**
+     * @description Cantitatea totală din acest produs aflată în coșul utilizatorului logat. Pentru utilizatorii nelogați sau atunci când produsul nu este în coș, valoarea este null.
+     * @example 2
+     */
+    cartQuantity: number | null;
 }

@@ -1,5 +1,6 @@
-import { Blocks, Plus, Grid2x2Plus } from "lucide-react"
+import { Blocks, Grid2x2Plus, Plus } from "lucide-react"
 
+import { QuantitySelector } from "@features/cart-change-quantity"
 import { Pagination } from "@features/pagination"
 
 import { ProductCard, useProducts } from "@entities/product"
@@ -11,13 +12,8 @@ import { ProductListEmpty } from "./product-list-empty"
 import { ProductListError } from "./product-list-error"
 import { ProductListSkeleton } from "./product-list-skeleton"
 
-type ProductUrlParams = {
-    page: number
-    categoryId: number
-}
-
 export const ProductList = () => {
-    const filters = useQueryParams<ProductUrlParams>()
+    const filters = useQueryParams()
     const { data: response, isLoading, isError } = useProducts(filters)
 
     if (isError) return <ProductListError />
@@ -30,33 +26,31 @@ export const ProductList = () => {
     return (
         <div>
             <div className="grid flex-1 pb-15 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-8 xl:gap-10">
-                {products.map((product) => (
-                    <ProductCard key={product.id} id={product.id} name={product.name}>
-                        <ProductCard.Image src={product.imageUrl || "/img/no-preview.png"}>
-                            {product.type === "CONFIGURABLE" && (
-                                <Blocks className="text-[#FE5F00]" />
-                            )}
-                        </ProductCard.Image>
+                {products.map(({ imageUrl, name, description, price, type, id, cartQuantity }) => (
+                    <ProductCard id={id} key={id}>
+                        <ProductCard.Header>
+                            <ProductCard.Image src={imageUrl} alt={name} />
 
-                        <ProductCard.Content
-                            title={product.name}
-                            description={product.description || "Fără descriere disponibilă"}
-                        />
-
+                            <ProductCard.BadgeSlot>
+                                {type === "CONFIGURABLE" && <Blocks />}
+                            </ProductCard.BadgeSlot>
+                        </ProductCard.Header>
+                        <ProductCard.Content>
+                            <ProductCard.Title>{name}</ProductCard.Title>
+                            <ProductCard.Description>{description}</ProductCard.Description>
+                        </ProductCard.Content>
                         <ProductCard.Footer>
-                            <span className="text-xl font-bold">{product.price} MDL</span>
-
-                            {product.type === "CONFIGURABLE" ? (
+                            <span>{price} lei</span>
+                            {type === "CONFIGURABLE" ? (
                                 <Button kind="soft">
-                                    <Grid2x2Plus size={20} className="mr-2" />
-                                    Собрать
+                                    <Grid2x2Plus /> Config
                                 </Button>
                             ) : (
                                 <Button kind="soft">
-                                    <Plus size={20} className="mr-2" />
-                                    Добавить
+                                    <Plus /> Adaugă
                                 </Button>
                             )}
+                            <QuantitySelector qty={cartQuantity} />
                         </ProductCard.Footer>
                     </ProductCard>
                 ))}

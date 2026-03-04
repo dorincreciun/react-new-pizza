@@ -663,6 +663,11 @@ export interface components {
              */
             sizes: components["schemas"]["FilterOptionDto"][];
             /**
+             * @description Cantitatea totală din acest produs aflată în coșul utilizatorului logat. Pentru utilizatorii nelogați sau atunci când produsul nu este în coș, valoarea este null.
+             * @example 2
+             */
+            cartQuantity: number | null;
+            /**
              * @description Data și ora creării (format ISO 8601)
              * @example 2024-01-15T10:30:00.000Z
              */

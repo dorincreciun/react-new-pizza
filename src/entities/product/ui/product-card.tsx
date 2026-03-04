@@ -1,72 +1,131 @@
-import React, { createContext, useContext } from "react"
+import { createContext, type ReactNode, useContext } from "react"
 
 import { Link } from "react-router"
 
 import { getRouteProductDetails } from "@shared/const"
 import { Image } from "@shared/ui"
+import { cn } from "@shared/utils"
 
-const ProductCardContext = createContext<{ id: number; name: string } | null>(null)
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-function useProductCard() {
-    const context = useContext(ProductCardContext)
-    if (!context) throw new Error("ProductCard sub-components must be rendered within ProductCard")
-    return context
-}
-
-interface ProductCardProps {
-    id: number
-    name: string
-    children: React.ReactNode
+interface WithClassName {
     className?: string
 }
 
-export const ProductCard = ({ id, name, children, className = "" }: ProductCardProps) => {
-    return (
-        <ProductCardContext.Provider value={{ id, name }}>
-            <div className={`relative flex w-full flex-col ${className}`}>{children}</div>
-        </ProductCardContext.Provider>
-    )
+interface WithChildren {
+    children: ReactNode
 }
 
-const ProductCardImage = ({
-    src,
-    alt,
-    children,
-}: {
-    src: string
-    alt?: string
-    children?: React.ReactNode
-}) => {
-    const { id, name } = useProductCard()
+type SlotProps = WithClassName & WithChildren
+
+// ─── Context ──────────────────────────────────────────────────────────────────
+
+interface ProductContextValue {
+    id: number
+}
+
+const ProductContext = createContext<ProductContextValue | undefined>(undefined)
+
+const useProductCard = () => {
+    const context = useContext(ProductContext)
+    if (!context) {
+        throw new Error("ProductCard.* trebuie randat în interiorul lui <ProductCard />")
+    }
+    return context
+}
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
+
+interface RootProps extends ProductContextValue, SlotProps {}
+
+const Root = ({ id, className, children }: RootProps) => (
+    <ProductContext.Provider value={{ id }}>
+        <div className={cn("relative flex w-full flex-col", className)}>{children}</div>
+    </ProductContext.Provider>
+)
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+
+const Header = ({ className, children }: SlotProps) => {
+    const { id } = useProductCard()
     return (
-        <div className="relative flex items-center justify-center overflow-hidden rounded-2xl bg-[#FE5F00]/5 p-5 transition-colors hover:bg-[#FE5F00]/10">
+        <div
+            className={cn(
+                "relative flex items-center justify-center overflow-hidden",
+                "rounded-2xl bg-[#FE5F00]/5 p-5 transition-colors hover:bg-[#FE5F00]/10",
+                className,
+            )}
+        >
             <Link
                 to={getRouteProductDetails(id)}
                 className="absolute inset-0 z-10"
-                aria-label={`View details for ${name}`}
-            />
-            <Image
-                src={src.startsWith("http") ? src : `http://localhost:3000/${src}`}
-                alt={alt || name}
-                width={220}
-                height={220}
+                aria-label="Vezi produsul"
             />
             {children}
         </div>
     )
 }
 
-const ProductCardContent = ({ title, description }: { title: string; description: string }) => (
-    <div className="flex-1 py-3.5">
-        <h3 className="mb-2 text-xl font-bold">{title}</h3>
-        <p className="line-clamp-2 text-[#B1B1B1]">{description}</p>
+// ─── Image ────────────────────────────────────────────────────────────────────
+
+interface ImageProps extends WithClassName {
+    src: string | null
+    alt: string
+}
+
+const IMG = ({ className, src, alt }: ImageProps) => {
+    const resolvedSrc =
+        src === null
+            ? null
+            : src.startsWith("http")
+              ? src
+              : `${import.meta.env.VITE_API_URL}/${src}`
+
+    if (!resolvedSrc) return null
+
+    return <Image className={className} src={resolvedSrc} alt={alt} width={220} height={220} />
+}
+
+// ─── BadgeSlot ────────────────────────────────────────────────────────────────
+
+const BadgeSlot = ({ className, children }: SlotProps) => (
+    <div className={cn("absolute top-3 right-3 z-20 flex gap-1", className)}>{children}</div>
+)
+
+// ─── Content ──────────────────────────────────────────────────────────────────
+
+const Content = ({ className, children }: SlotProps) => (
+    <div className={cn("flex-1 py-3.5", className)}>{children}</div>
+)
+
+// ─── Title ────────────────────────────────────────────────────────────────────
+
+const Title = ({ className, children }: SlotProps) => (
+    <h3 className={cn("mb-2 text-xl font-bold", className)}>{children}</h3>
+)
+
+// ─── Description ──────────────────────────────────────────────────────────────
+
+const Description = ({ className, children }: SlotProps) => (
+    <p className={cn("line-clamp-2 text-[#B1B1B1]", className)}>{children}</p>
+)
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+
+const Footer = ({ className, children }: SlotProps) => (
+    <div className={cn("mt-auto flex items-center justify-between pt-2", className)}>
+        {children}
     </div>
 )
 
-const ProductCardFooter = ({ children }: { children: React.ReactNode }) => (
-    <div className="mt-auto flex items-center justify-between pt-2">{children}</div>
-)
+// ─── Export ───────────────────────────────────────────────────────────────────
 
-ProductCard.Image = ProductCardImage
-ProductCard.Content = ProductCardContent
-ProductCard.Footer = ProductCardFooter
+export const ProductCard = Object.assign(Root, {
+    Header,
+    Image: IMG,
+    BadgeSlot,
+    Content,
+    Title,
+    Description,
+    Footer,
+})

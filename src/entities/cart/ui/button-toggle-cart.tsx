@@ -4,7 +4,7 @@ import { useCartStore } from "@entities/cart"
 
 import { Button } from "@shared/ui"
 
-export const ToggleCart = () => {
+export const ButtonToggleCart = () => {
     const openCart = useCartStore((s) => s.openCart)
     return (
         <Button kind={"outline"} onlyIcon onClick={() => openCart()}>
