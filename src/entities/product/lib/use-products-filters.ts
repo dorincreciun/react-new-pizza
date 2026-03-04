@@ -7,19 +7,19 @@ import { getProductsFilters } from "../api/get-products-filters"
 import { mapDtoFilterOptions } from "../model/map-dto-filter-options"
 
 interface Props {
-    categoryId: number
-    size: string
-    ingredients: string
-    types: string
+    categoryId?: number
+    size?: string
+    ingredients?: string
+    types?: string
 }
 
-export const useProductsFilters = ({ categoryId, size, ingredients, types }: Partial<Props>) => {
-    const keys = QueryKeys.productFilters(categoryId, size, ingredients, types)
+export const useProductsFilters = (params: Partial<Props>) => {
+    const keys = QueryKeys.productFilters(params)
 
     return useQuery({
         queryKey: keys,
         queryFn: (): Promise<ApiSchema<"ProductFiltersResponseDto">> =>
-            getProductsFilters(categoryId),
+            getProductsFilters(params.categoryId),
         select: (data) => mapDtoFilterOptions(data),
     })
 }
