@@ -2,8 +2,8 @@ import { Slot } from "@radix-ui/react-slot"
 
 import { cn } from "@shared/utils"
 
-import { useDropdownItem } from "./dropdown.hooks"
-import type { DropdownItemProps } from "./dropdown.types"
+import { useDropdownItem } from "../model/dropdown.hooks"
+import type { DropdownItemProps } from "../model/dropdown.types"
 
 const ITEM_BASE_STYLES = cn(
     "text-sm font-semibold text-black",

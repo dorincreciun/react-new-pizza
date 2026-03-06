@@ -1,7 +1,7 @@
 import { cn } from "@shared/utils"
 
-import { useDropdownContext } from "./dropdown.hooks"
-import type { DropdownContentProps } from "./dropdown.types"
+import { useDropdownContext } from "../model/dropdown.hooks"
+import type { DropdownContentProps } from "../model/dropdown.types"
 
 const CONTENT_BASE_STYLES = cn(
     "absolute right-0 z-50 mt-3 w-64 origin-top-right overflow-hidden rounded-2xl",

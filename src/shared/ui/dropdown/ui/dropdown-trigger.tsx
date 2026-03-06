@@ -1,9 +1,9 @@
 import { Slot } from "@radix-ui/react-slot"
 
-import type { DropdownTriggerProps } from "@shared/ui/dropdown/dropdown.types"
+import type { DropdownTriggerProps } from "@shared/ui/dropdown/model/dropdown.types"
 import { cn } from "@shared/utils"
 
-import { useDropdownTrigger } from "./dropdown.hooks"
+import { useDropdownTrigger } from "../model/dropdown.hooks"
 
 const TRIGGER_BASE_STYLES = "cursor-pointer outline-hidden transition-transform duration-200"
 

@@ -5,7 +5,7 @@ import type {
     DropdownContextProps,
     UseDropdownItemOptions,
     UseDropdownTriggerOptions,
-} from "@shared/ui/dropdown/dropdown.types"
+} from "@shared/ui/dropdown/model/dropdown.types"
 
 import { DropdownContext } from "./dropdown.context"
 

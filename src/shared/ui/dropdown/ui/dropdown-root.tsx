@@ -1,8 +1,8 @@
 import { cn } from "@shared/utils"
 
-import { DropdownContext } from "./dropdown.context"
-import { useDropdownState } from "./dropdown.hooks"
-import type { DropdownProps, DropdownContextProps } from "./dropdown.types"
+import { DropdownContext } from "../model/dropdown.context"
+import { useDropdownState } from "../model/dropdown.hooks"
+import type { DropdownProps, DropdownContextProps } from "../model/dropdown.types"
 
 /**
  * Componenta rădăcină a Dropdown-ului.
@@ -11,7 +11,7 @@ import type { DropdownProps, DropdownContextProps } from "./dropdown.types"
 export const DropdownRoot = ({
     defaultOpen = false,
     closeOnSelect = true,
-    closeOnClickOutside = false,
+    closeOnClickOutside = true,
     children,
     className,
     ...rest
