@@ -5,7 +5,7 @@ import { Button, Title } from "@shared/ui"
 import { type BaseFilterOption, FilterGroup } from "./filter-section"
 
 const Root = ({ children }: PropsWithChildren) => {
-    return <div className="flex w-75 flex-col self-stretch">{children}</div>
+    return <div className="flex w-112.5 flex-col self-stretch">{children}</div>
 }
 
 const Header = ({ children }: PropsWithChildren) => {

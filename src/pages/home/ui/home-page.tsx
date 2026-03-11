@@ -17,7 +17,7 @@ export const HomePage = () => {
                 <SortDropdown />
             </div>
 
-            <div className="flex h-auto items-stretch pt-9 gap-8 xl:gap-10">
+            <div className="flex h-auto items-stretch gap-6 pt-8 md:gap-8 md:pt-10 lg:gap-10 xl:gap-12 xl:pt-12">
                 <ProductFilter />
                 <ProductList />
             </div>
