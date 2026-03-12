@@ -12,9 +12,8 @@ export const ProfilePage = () => {
     return (
         <Container className="pt-6 pb-12 md:pt-8 md:pb-16">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10 xl:gap-12">
-                {/* Sidebar: identitate (fixă, la stânga pe desktop) */}
                 <aside className="shrink-0 lg:sticky lg:top-6 lg:w-72 xl:w-80">
-                    <Title as="h1" size="xl" className="mb-6 lg:mb-6">
+                    <Title as="h1" size="xl" className="mb-6">
                         Profilul meu
                     </Title>
                     <div className="rounded-2xl border border-black/6 bg-white p-6 shadow-sm">
@@ -25,7 +24,6 @@ export const ProfilePage = () => {
                     </div>
                 </aside>
 
-                {/* Zona principală: statistici + informații + setări */}
                 <main className="min-w-0 flex-1 space-y-8">
                     <section aria-label="Statistici">
                         <DashboardStats />

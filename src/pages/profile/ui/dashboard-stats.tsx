@@ -36,8 +36,9 @@ export const DashboardStats = () => {
             variant: "white",
         },
     ]
+
     return (
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {stats.map((stat, index) => (
                 <StatCard key={index} {...stat} />
             ))}

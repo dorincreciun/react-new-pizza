@@ -20,5 +20,9 @@ export const useUser = (): UserEntity | null => {
         refetchOnWindowFocus: false,
     })
 
+    // Fără token (sesiune expirată / logout) afișăm mereu starea „neautentificat”,
+    // nu ne bazăm pe cache-ul query-ului care poate încă conține user-ul vechi.
+    if (!token) return null
+
     return data ?? null
 }
