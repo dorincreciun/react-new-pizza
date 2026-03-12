@@ -263,6 +263,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Produse bulk pentru coș (entitate completă + qty)
+         * @description Primește o listă de perechi (productId, quantity) și returnează pentru fiecare produs găsit întreaga entitate produs (același format ca GET /products/:id) plus qty (cantitatea cerută) și availableQuantity (stoc). ID-urile inexistente sunt omise. Maxim 30 articole per request. Rută publică – pentru coșul de cumpărături.
+         */
+        post: operations["ProductController_bulk"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/{id}": {
         parameters: {
             query?: never;
@@ -573,6 +593,11 @@ export interface components {
              * @example Personalizabil
              */
             name: string;
+            /**
+             * @description Prețul suplimentar (în lei) față de prețul de bază al produsului pentru această opțiune. Null în cazul în care opțiunea nu modifică prețul (ex: tip produs folosit doar pentru filtrare).
+             * @example 5
+             */
+            extraPrice: number | null;
         };
         ProductResponseDto: {
             /**
@@ -645,19 +670,22 @@ export interface components {
              */
             ingredients: components["schemas"]["IngredientResponseDto"][];
             /**
-             * @description Lista de mărimi disponibile (id numeric: 1=mică, 2=medie, 3=mare, 4=familie; name = etichetă afișare)
+             * @description Lista de mărimi disponibile pentru acest produs. Fiecare mărime are un id numeric (1=mică, 2=medie, 3=mare, 4=familie), un nume (etichetă afișare) și, opțional, un extraPrice față de prețul de bază.
              * @example [
              *       {
              *         "id": 1,
-             *         "name": "Mică"
+             *         "name": "Mică",
+             *         "extraPrice": null
              *       },
              *       {
              *         "id": 2,
-             *         "name": "Medie"
+             *         "name": "Medie",
+             *         "extraPrice": 5
              *       },
              *       {
              *         "id": 3,
-             *         "name": "Mare"
+             *         "name": "Mare",
+             *         "extraPrice": 10
              *       }
              *     ]
              */
@@ -667,6 +695,11 @@ export interface components {
              * @example 2
              */
             cartQuantity: number | null;
+            /**
+             * @description Cantitate disponibilă în stoc. Null dacă produsul nu are stoc definit (nelimitat).
+             * @example 10
+             */
+            stockQuantity: number | null;
             /**
              * @description Data și ora creării (format ISO 8601)
              * @example 2024-01-15T10:30:00.000Z
@@ -803,7 +836,7 @@ export interface components {
              */
             ingredientIds?: number[];
             /**
-             * @description Lista de mărimi disponibile
+             * @description Lista de mărimi disponibile pentru acest produs (slug-uri).
              * @example [
              *       "mică",
              *       "medie",
@@ -811,6 +844,20 @@ export interface components {
              *     ]
              */
             sizes?: string[];
+            /**
+             * @description Mapare opțională între slug-ul mărimii și prețul suplimentar (în lei) față de prețul de bază al produsului. Cheile trebuie să fie slug-uri prezente în lista de sizes, valorile pot fi numere sau null dacă nu se aplică un extra preț.
+             * @example {
+             *       "mică": null,
+             *       "medie": 5,
+             *       "mare": 10
+             *     }
+             */
+            sizePriceModifiers?: Record<string, never>;
+            /**
+             * @description Cantitate disponibilă în stoc. Null sau lipsă = stoc nelimitat.
+             * @example 50
+             */
+            stockQuantity?: number | null;
         };
         UpdateProductDto: {
             /**
@@ -865,7 +912,7 @@ export interface components {
              */
             ingredientIds?: number[];
             /**
-             * @description Lista de mărimi disponibile
+             * @description Lista de mărimi disponibile pentru acest produs (slug-uri).
              * @example [
              *       "mică",
              *       "medie",
@@ -873,6 +920,60 @@ export interface components {
              *     ]
              */
             sizes?: string[];
+            /**
+             * @description Mapare opțională între slug-ul mărimii și prețul suplimentar (în lei) față de prețul de bază al produsului. Cheile trebuie să fie slug-uri prezente în lista de sizes, valorile pot fi numere sau null dacă nu se aplică un extra preț.
+             * @example {
+             *       "mică": null,
+             *       "medie": 5,
+             *       "mare": 10
+             *     }
+             */
+            sizePriceModifiers?: Record<string, never>;
+            /**
+             * @description Cantitate disponibilă în stoc. Null sau lipsă = stoc nelimitat.
+             * @example 50
+             */
+            stockQuantity?: number | null;
+        };
+        BulkProductItemRequestDto: {
+            /**
+             * @description ID-ul produsului (string, se parsează la număr)
+             * @example 1
+             */
+            productId: string;
+            /**
+             * @description Cantitatea cerută de client pentru acest produs
+             * @example 2
+             */
+            quantity: number;
+        };
+        BulkProductsRequestDto: {
+            /**
+             * @description Lista de articole: productId (string) și quantity (cantitatea cerută). Maxim 30 articole per request.
+             * @example [
+             *       {
+             *         "productId": "1",
+             *         "quantity": 2
+             *       },
+             *       {
+             *         "productId": "2",
+             *         "quantity": 1
+             *       }
+             *     ]
+             */
+            items: components["schemas"]["BulkProductItemRequestDto"][];
+        };
+        BulkProductItemDto: {
+            /**
+             * @description Cantitatea cerută de client pentru acest produs (din request).
+             * @example 2
+             */
+            qty: number;
+            /**
+             * @description Cantitate disponibilă în stoc. Null dacă produsul nu are stoc definit (nelimitat).
+             * @example 10
+             */
+            availableQuantity: number | null;
         };
     };
     responses: never;
@@ -2346,6 +2447,51 @@ export interface operations {
                      *       "statusCode": 404,
                      *       "message": "Categoria cu ID-ul 999 nu a fost găsită",
                      *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ProductController_bulk: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkProductsRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Lista de produse: entitate completă (id, name, price, category, ingredients, sizes, etc.) + qty + availableQuantity */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: (components["schemas"]["ProductResponseDto"] & components["schemas"]["BulkProductItemDto"])[];
+                    };
+                };
+            };
+            /** @description Lista items goală, prea multe articole sau quantity invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 400,
+                     *       "message": [
+                     *         "items trebuie să conțină cel puțin un element",
+                     *         "quantity trebuie să fie cel puțin 1"
+                     *       ],
+                     *       "error": "Bad Request"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponseDto"];
