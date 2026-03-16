@@ -8,6 +8,6 @@ export interface CartState {
     openCart: () => void
     closeCart: () => void
     addToCart: (id: string) => void
-    removeToCart: (id: string) => void
+    removeFromCart: (id: string) => void
     items: CartItem[]
 }

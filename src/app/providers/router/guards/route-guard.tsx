@@ -14,17 +14,19 @@ interface RouteGuardProps {
     roles?: UserRole[]
 }
 
-export const RouteGuard = ({ children, roles }: RouteGuardProps) => {
+export const RouteGuard = ({ children, authOnly, roles }: RouteGuardProps) => {
     const location = useLocation()
-    const isAuthenticated = useUser()
+    const user = useUser()
 
-    const userRole = "USER"
+    const isAuthenticated = !!user
+    const userRole = user?.role
+    const requiresAuth = !!authOnly || !!roles?.length
 
-    if (!isAuthenticated) {
+    if (requiresAuth && !isAuthenticated) {
         return <Navigate to={RoutePath.main} state={{ from: location }} replace />
     }
 
-    if (roles && !roles.includes(userRole)) {
+    if (roles && userRole && !roles.includes(userRole)) {
         return <Navigate to={RoutePath.main} replace />
     }
 

@@ -26,7 +26,7 @@ export const useLogin = () => {
         onSuccess: (response) => {
             setToken(response.accessToken)
 
-            queryClient.setQueryData(QueryKeys.authUser, response.user)
+            queryClient.invalidateQueries({ queryKey: QueryKeys.authUser })
 
             closeModal()
         },

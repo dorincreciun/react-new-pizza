@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router"
 
-import { RouteGuard } from "@app/providers/router/guards/route-guard.tsx"
+import { RouteGuard } from "@app/providers/router/guards/route-guard"
 
 import type { AppRouteProps } from "../types/router"
 
