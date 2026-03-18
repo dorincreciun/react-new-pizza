@@ -17,7 +17,7 @@ type OptionType = {
     /** Numele afișat în interfață. */
     name: string
     /** Identificatorul unic al opțiunii. */
-    id: string
+    id: number
 }
 
 interface ISegmentedControlProps {

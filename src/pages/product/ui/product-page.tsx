@@ -6,56 +6,18 @@ import { Button, Container, Image, SegmentedControl } from "@shared/ui"
 import "swiper/css"
 
 import { IngredientSelect } from "./ingredient-select"
+import { ProductPageEmpty } from "./product-page-empty"
+import { ProductPageError } from "./product-page-error"
+import { ProductPageSkeleton } from "./product-page-skeleton"
 
-// --- SKELETON ---
-const ProductSkeleton = () => {
-    return (
-        <Container className="mt-10 animate-pulse">
-            <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
-                <div className="col-span-1 aspect-square rounded-3xl bg-gray-100 md:col-span-5" />
-                <div className="col-span-1 space-y-6 md:col-span-7">
-                    <div className="h-10 w-1/2 rounded-lg bg-gray-100" />
-                    <div className="h-24 w-full rounded-lg bg-gray-100" />
-                    <div className="h-40 w-full rounded-lg bg-gray-100" />
-                </div>
-            </div>
-        </Container>
-    )
-}
-
-// --- PRODUCT LENGTH < 1 ---
-const ProductEmpty = () => {
-    return (
-        <Container className="mt-10 py-20 text-center">
-            <p className="text-lg text-gray-400">Produsul nu a fost găsit.</p>
-        </Container>
-    )
-}
-
-// --- PRODUCT ERROR ---
-const ProductError = () => {
-    return (
-        <Container className="flex h-[60vh] flex-col items-center justify-center gap-6">
-            <div className="space-y-2 text-center">
-                <h2 className="text-3xl font-bold text-gray-800">Ups! Ceva nu a mers bine</h2>
-                <p className="text-gray-500">Nu am putut încărca detaliile produsului.</p>
-            </div>
-            <Button size="lg" onClick={() => window.location.reload()}>
-                Încearcă din nou
-            </Button>
-        </Container>
-    )
-}
-
-// --- PRODUCT PAGE ---
 export const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
     const productId = Number(id)
-    const { data, isLoading, isError } = useProduct(productId)
+    const { data, isLoading, isError } = useProduct({ productId })
 
-    if (isError) return <ProductError />
-    if (isLoading) return <ProductSkeleton />
-    if (!data) return <ProductEmpty />
+    if (isError) return <ProductPageError />
+    if (isLoading) return <ProductPageSkeleton />
+    if (!data) return <ProductPageEmpty />
 
     const { imageUrl, name, description, price, sizes, ingredients } = data
 
